@@ -1,0 +1,76 @@
+/* Buttons */
+.ghost-btn{border:1px solid #111;background:#fff;padding:9px 16px;border-radius:20px;font-weight:600;cursor:pointer}
+.ghost-btn{border-color:#ddd}.ghost-btn:hover{background:#111;color:#fff}
+.download-btn{width:100%;margin-top:14px;border:0;border-radius:10px;background:#111;color:#fff;padding:13px;font-weight:700;cursor:pointer}.download-btn:hover{background:#2b2b2b}
+/* In the topbar (next to Reset), the download button drops its
+   sidebar-block sizing and matches the pill shape of its neighbors. */
+.top-actions .download-btn{width:auto;margin-top:0;border-radius:20px;padding:9px 18px}
+
+/* Preview stage filter toggles */
+.stage-filters{display:flex;gap:7px;margin:0 4px 12px;flex-wrap:wrap}
+.filter-btn{border:1px solid #ddd;background:#fff;color:#999;padding:7px 14px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.08em;cursor:pointer;transition:.2s}
+.filter-btn:hover{border-color:#111;color:#111}
+.filter-btn.active{border-color:#111;background:#111;color:#fff}
+
+/* Upload slots: top / bottom / shoes */
+.upload-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:10px 0}
+.upload-slot{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;height:98px;border:1px dashed #cfcfcf;border-radius:14px;background:#fcfcfc;cursor:pointer;overflow:hidden;transition:.2s}
+.upload-slot:hover,.upload-slot.dragging{border-color:#111;background:#f1f1ef;transform:translateY(-1px)}
+.upload-slot input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-slot .slot-icon{font-size:22px;line-height:1;position:relative;z-index:1}
+.upload-slot .slot-name{font-size:10px;font-weight:800;letter-spacing:.1em;margin-top:3px;position:relative;z-index:1}
+.slot-thumb{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center}
+#shoesThumb{background-size:70%}
+.upload-slot.has-image{border-style:solid;border-color:#111}
+.upload-slot.has-image .slot-icon{display:none}
+.upload-slot.has-image .slot-name{background:rgba(255,255,255,.92);padding:3px 8px;border-radius:999px}
+.upload-slot.has-image::after{content:"✓";position:absolute;top:6px;right:8px;width:16px;height:16px;border-radius:50%;background:#2f9b54;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;z-index:1}
+
+/* Accessories: one dedicated slot per accessory, styled like the top/bottom/
+   shoes slots above but smaller (3-column grid) with a remove button once
+   filled instead of the shared green checkmark. */
+.accessories-panel{border:1px solid #eee;border-radius:14px;padding:10px 10px 12px;margin:12px 0}
+.accessories-head{display:flex;align-items:center;justify-content:space-between}
+.accessories-head .slot-name{font-size:10px;font-weight:800;letter-spacing:.1em}
+.accessory-count{font-size:9px;font-weight:800;color:#999;border:1px solid #ddd;border-radius:999px;padding:2px 8px}
+.accessory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:9px 0 0}
+.accessory-grid .upload-slot{height:72px}
+.accessory-grid .slot-icon{font-size:18px}
+.accessory-grid .slot-name{font-size:9px}
+.accessory-slot.has-image::after{display:none}
+.slot-remove{position:absolute;top:5px;right:6px;width:18px;height:18px;border-radius:50%;border:1px solid #ddd;background:#fff;color:#111;font-size:11px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2}
+.slot-remove:hover{background:#111;color:#fff}
+.upload-slot.has-image .slot-remove{display:flex}
+
+/* URL paste + explicit Upload button rows (under top/bottom/shoes/accessories) */
+.url-uploads{display:flex;flex-direction:column;gap:6px;margin:9px 0 0}
+.url-row{display:flex;align-items:center;gap:6px}
+.url-row-label{font-size:9px;font-weight:800;letter-spacing:.08em;color:#999;width:38px;flex:none}
+.upload-btn{flex:none;border:1px solid #111;background:#fff;color:#111;padding:7px 10px;border-radius:8px;font-size:9px;font-weight:800;letter-spacing:.05em;cursor:pointer;transition:.2s}
+.upload-btn:hover{background:#111;color:#fff}
+.url-input{flex:1;min-width:0;border:1px solid #ddd;border-radius:8px;padding:7px 9px;font-size:11px;font:inherit;outline:none}
+.url-input:focus{border-color:#111}
+.url-add-btn{flex:none;border:1px solid #ddd;background:#fcfcfc;color:#111;padding:7px 10px;border-radius:8px;font-size:9px;font-weight:800;letter-spacing:.05em;cursor:pointer;transition:.2s}
+.url-add-btn:hover{border-color:#111;background:#f1f1ef}
+.accessories-panel .url-row{margin-top:9px}
+.accessories-panel .url-row .url-row-label{width:auto}
+.auto-status{display:flex;align-items:center;gap:7px;margin:15px 0 0;font-size:9px;font-weight:800;letter-spacing:.08em;color:#555}
+.auto-status span{width:7px;height:7px;border-radius:50%;background:#2f9b54}.auto-status.busy span{background:#d99018}.auto-status.error span{background:#c33}
+.hint{font-size:9px;color:#999;line-height:1.5;margin:8px 0 0}
+
+/* Settings */
+.settings{border-top:1px solid #eee;margin-top:16px;padding-top:6px}.settings label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:12px 0}
+.settings input{display:block;width:100%;margin-top:7px;border:1px solid #ddd;border-radius:9px;padding:10px;font:inherit;font-size:12px;outline:none}.settings input:focus{border-color:#111}
+.settings textarea{display:block;width:100%;margin-top:7px;border:1px solid #ddd;border-radius:9px;padding:10px;font:inherit;font-size:12px;outline:none;resize:vertical;min-height:60px;line-height:1.4;box-sizing:border-box}.settings textarea:focus{border-color:#111}
+.settings select{display:block;width:100%;margin-top:7px;border:1px solid #ddd;border-radius:9px;padding:10px;font:inherit;font-size:12px;outline:none;background:#fff;color:#111}.settings select:focus{border-color:#111}
+.settings-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#111;margin-bottom:2px}
+.settings-row{display:flex;gap:10px}.settings-row label{flex:1;min-width:0}
+.settings input[type="color"]{padding:4px;height:38px;cursor:pointer}
+.settings input[type="number"]{-moz-appearance:textfield}
+.checkbox-label{display:flex!important;align-items:center;gap:7px;font-size:10px}
+.checkbox-label input[type="checkbox"]{display:inline-block!important;width:auto!important;margin:0!important;cursor:pointer}
+/* Showcase-tag position — left/right nudge buttons, replacing the old
+   outline-color swatches in the "Showcase Tag Style" panels. */
+.settings-label-standalone{flex:none;align-self:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.tag-position-btns{display:flex;flex:1;gap:8px}
+.tag-move-btn{flex:1;padding:8px 6px;font-size:11px;font-weight:700;border-radius:9px}

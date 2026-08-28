@@ -1,0 +1,122 @@
+/* ============================================================
+   TEMPLATE 2 — "List" showcase
+   Second, opt-in live-preview layout modeled on a reference
+   screenshot: bold section headers with bullet lists on the
+   left, and — on the right — the top/bottom/shoes photos
+   stacked together like one worn outfit (shoes sized down a
+   touch so they don't overpower the rest of the fit).
+   Everything here is scoped under .list-view / .lt-* / the
+   .template-switch, so Template 1 (.classic-view) is untouched.
+   ============================================================ */
+
+/* Switch control, styled to match the existing .stage-filters row */
+.template-switch{display:flex;gap:7px;margin:0 4px 10px}
+.template-btn{border:1px solid #ddd;background:#fff;color:#999;padding:7px 14px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.08em;cursor:pointer;transition:.2s}
+.template-btn:hover{border-color:#111;color:#111}
+.template-btn.active{border-color:#111;background:#111;color:#fff}
+
+/* Template 2 now locks to the same aspect-ratio/overflow-hidden card as
+   Template 1 (set by the #showcase[data-comp] rules in composition.css,
+   which apply to both templates). That's what makes "live preview" and
+   "composition size" the same box, so unlimited drag on Template 2 is
+   truly edge to edge of both at once — and matches what actually gets
+   exported by html2canvas. */
+
+/* .list-view fills that fixed card exactly (inset:0) instead of sizing
+   itself to its own text content — previously it stayed in normal flow
+   and grew as tall as its headings/bullets needed, which let
+   #dragStageList (absolute inset:0 *inside* .list-view) stretch past the
+   visible composition frame. Long copy is handled by .lt-text-col
+   scrolling internally instead of pushing the card taller. */
+.list-view{position:absolute;inset:0;background:#fff;padding:44px 30px 40px;overflow:hidden}
+
+.lt-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:26px;align-items:start;height:100%}
+
+/* ---- Left column: draggable text sections ----
+   .lt-text-col is the "stage" each section (heading + bullets) drags
+   within — position:relative so the sections' position:absolute
+   left/top resolve against THIS box (not the whole card), same idea as
+   .labels on Template 1. Own coordinate space, stored in
+   state.labelPositions.list — see setupLabelDragging() in
+   js/outfit-renderer.js. Only what's in-frame at export time makes it
+   into the downloaded PNG, same tradeoff Template 1 already makes with
+   its fixed label areas. */
+.lt-text-col{position:relative;height:100%;min-height:0;overflow:visible;padding-right:6px}
+
+.lt-section{
+  position: absolute;
+  width: 92%;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.lt-section.dragging{ cursor: grabbing; }
+
+.lt-heading{
+  font-family:var(--label-font);
+  font-weight:var(--label-weight);
+  font-size:var(--label-size);
+  font-style:var(--label-style);
+  letter-spacing:.01em;
+  text-transform:uppercase;
+  margin:0 0 8px;
+  color:var(--label-color);
+}
+.lt-underline{width:54px;height:3px;background:#111;margin-bottom:14px;border-radius:2px}
+
+.lt-bullets{list-style:none;margin:0;padding:0}
+.lt-bullets li{position:relative;padding-left:15px;line-height:1.5;margin-bottom:9px;
+  font-family:var(--desc-font);font-size:var(--desc-size);font-weight:var(--desc-weight);color:var(--desc-color);font-style:var(--desc-style);
+}
+.lt-bullets li::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:var(--desc-color)}
+.lt-bullets:empty::before{content:"Add a description to see bullets here";display:block;font-size:10px;font-weight:600;color:#bbb;padding-left:0}
+
+/* ---- Right column: the whole outfit worn as one stack ---- */
+.lt-outfit-col{display:flex;flex-direction:column;align-items:center;position:sticky;top:0}
+
+.lt-outfit-stack{display:flex;flex-direction:column;align-items:center;width:100%}
+
+.lt-outfit-item{display:flex;align-items:center;justify-content:center;width:100%}
+.lt-outfit-item img{width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 10px 10px rgba(0,0,0,.12));display:block}
+
+/* Layered like a worn outfit: shirt on top, pants overlapping its
+   hem slightly, shoes tucked just under the pant leg and sized
+   down so they read as feet, not another full garment. */
+.lt-top-item{width:80%;z-index:3}
+.lt-bottom-item{width:72%;margin-top:-22px;z-index:2}
+/* Tucked up under the bottom item — same idea as Template 1, where the
+   shoes box overlaps well inside the bottom box instead of just touching
+   it, so they read as feet peeking out rather than a separate photo. */
+.lt-shoes-item{width:26%;margin-top:-38px;z-index:1}
+.lt-shoes-item img{max-height:120px;width:auto;margin:0 auto}
+
+.lt-placeholder{border:1px dashed #ccc;color:#aaa;font-size:10px;padding:20px 26px;border-radius:10px;text-align:center;width:100%}
+
+/* The real photo now floats on #dragStageList (see js/outfit-renderer.js)
+   so it can be dragged edge to edge across the whole Template 2 preview.
+   These boxes stay empty once filled, but keep a reserved height close to
+   what the photo used to take up, so the two-column layout — and the
+   "worn outfit" overlap between top/bottom/shoes — doesn't collapse. */
+.lt-top-item.has-photo{min-height:170px}
+.lt-bottom-item.has-photo{min-height:230px}
+.lt-shoes-item.has-photo{min-height:90px}
+
+.lt-accessories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin-top:22px}
+.lt-accessories-grid img{width:100%;height:52px;object-fit:contain;filter:drop-shadow(0 8px 8px rgba(0,0,0,.1))}
+.lt-accessories-grid .lt-placeholder{grid-column:1/-1}
+.lt-accessories-grid.has-photos{min-height:130px}
+
+/* #dragStageList spans the whole Template 2 card (.list-view is now
+   position:absolute;inset:0, matching the fixed composition size exactly)
+   — see the shared .drag-stage/.drag-image rules in css/style.css. The
+   floated accessory photos reuse the same fixed 18% sizing as Template
+   1's; the floated garment photos (top/bottom/short/shoes) get their
+   width set inline per category (see LIST_GARMENT_DEFAULTS in
+   js/state.js). */
+
+@media(max-width:600px){
+  .list-view{padding:30px 18px 26px}
+  .lt-grid{grid-template-columns:1fr}
+  .lt-outfit-col{position:static;margin-top:10px}
+}

@@ -1,0 +1,2 @@
+@media(max-width:900px){.workspace{grid-template-columns:1fr}.controls{order:2}.preview-wrap{order:1}.showcase{width:min(100%,686px)}}
+@media(max-width:600px){main{padding:28px 14px}.hero{align-items:start}.hero-badge{display:none}.workspace{gap:18px}.labels{left:14px;right:14px}.label{font-size:8px}.label b{font-size:10px}.top-actions .ghost-btn{display:none}.upload-grid{gap:7px}.upload-slot{height:84px}}

@@ -1,0 +1,148 @@
+*{box-sizing:border-box}
+:root{--ink:#111;--muted:#777;--line:#ddd;--paper:#fff;--soft:#f5f5f3;--accent:#c53b3b}
+body{margin:0;background:#f7f7f5;color:var(--ink);font-family:Inter,Arial,sans-serif}
+.topbar{height:76px;background:#fff;border-bottom:1px solid #e9e9e9;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;position:sticky;top:0;z-index:10}
+.brand-header h1{font-family:"Space Grotesk",sans-serif;font-size:22px;letter-spacing:.08em;margin:0;font-weight:800}
+.brand-header span{font-size:11px;color:#c33;letter-spacing:.12em;margin-left:2px}
+.top-actions{display:flex;gap:8px}
+main{max-width:1250px;margin:auto;padding:42px 28px 70px}
+.hero{display:flex;justify-content:space-between;align-items:end;margin-bottom:34px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.18em;margin:0 0 8px}
+.hero h2{font-family:"Space Grotesk",sans-serif;font-size:clamp(38px,6vw,72px);line-height:.93;margin:0;letter-spacing:-.05em}
+.hero h2 strong{font-weight:700}
+.sub{max-width:720px;color:#666;line-height:1.6;margin:18px 0 0}
+.hero-badge{width:76px;height:76px;border:1px solid #111;border-radius:50%;display:grid;place-items:center;text-align:center;font-size:15px;font-weight:800;line-height:1.05}
+.hero-badge small{font-size:8px;letter-spacing:.12em}
+.workspace{display:grid;grid-template-columns:350px 1fr;gap:28px;align-items:start}
+.controls{background:#fff;border:1px solid #e4e4e4;border-radius:20px;padding:20px;box-shadow:0 12px 35px rgba(0,0,0,.04)}
+.panel-title h3{margin:0;font-size:18px}.panel-title p{margin:6px 0 16px;color:#888;font-size:12px}
+.preview-wrap{min-width:0}.preview-header{height:42px;display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:800;letter-spacing:.12em;padding:0 4px}
+.status{color:#555}.status i{display:inline-block;width:7px;height:7px;background:#2f9b54;border-radius:50%;margin-right:6px}
+.showcase{position:relative;width:min(100%,686px);aspect-ratio:4/5;margin:auto;overflow:hidden;background:#fff;box-shadow:0 18px 50px rgba(0,0,0,.12);
+  /* Label vs description text style — the small category tag (Template
+     1's bold "TOP:" prefix, Template 2's section heading, Template 3's
+     small uppercase caption) styled separately from the actual typed
+     description copy (Template 1's .label span, Template 2's
+     .lt-bullets li, Template 3's .ed-label b). See js/app.js
+     applyTextStyle, wired to the "Label Style" / "Description Style"
+     panels in the sidebar. Defaults match what each template already
+     used before this was configurable. */
+  --label-font: "Space Grotesk", Arial, sans-serif;
+  --label-size: 16px;
+  --label-weight: 800;
+  --label-color: #111;
+  --label-style: normal;
+  --desc-font: "Inter", Arial, sans-serif;
+  --desc-size: 12px;
+  --desc-weight: 600;
+  --desc-color: #222;
+  --desc-style: normal;
+  /* "Showcase" tag style (logo + text), separately controllable — see
+     js/app.js applyTagTextStyle / applyTagLogoStyle, wired to the
+     "Showcase Tag Style" panel in the sidebar. Outline colors default to
+     white so they're invisible against the white showcase card until a
+     visible color is chosen. */
+  --tag-text-font: "Inter", Arial, sans-serif;
+  --tag-text-size: 18px;
+  --tag-text-weight: 600;
+  --tag-text-color: #888;
+  --tag-text-style: normal;
+  --tag-text-outline: #ffffff;
+  --tag-logo-size: 18px;
+  --tag-logo-outline: #ffffff;
+  --tag-group-x-top: 0px;
+  --tag-group-x-bottom: 0px;
+  --tag-group-x-shoes: 0px;
+  --tag-group-y-top: 0px;
+  --tag-group-y-bottom: 0px;
+  --tag-group-y-shoes: 0px;
+  --tag-logo-x-top: 0px;
+  --tag-logo-x-bottom: 0px;
+  --tag-logo-x-shoes: 0px;
+}
+.product-stage{position:absolute;inset:105px 40px 82px}
+.flat-item{position:absolute;display:flex;align-items:center;justify-content:center;overflow:visible}
+.top-item{align-items:flex-end}
+.bottom-item{align-items:flex-start}
+.flat-item img,.product-image{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;filter:var(--photo-fx, drop-shadow(0 12px 10px rgba(0,0,0,.12)));display:block;margin:auto}
+.placeholder{border:1px dashed #bbb;color:#aaa;font-size:10px;padding:25px 45px;border-radius:10px}
+/* Fixed (px) sizes instead of fluid (%) — locked to the 686-wide card so
+   they no longer stretch/shrink with the viewport. "short" reuses the
+   bottom-item box (js/outfit-renderer.js renders it into #bottomStage),
+   so it's fixed too as soon as bottom-item is.
+   Each item is narrowed to ~75% of the stage width and pushed to the
+   side OPPOSITE its label (see .top-label/.bottom-label/.shoes-label
+   below) so the photo and its caption sit in their own lanes and never
+   overlap, however tightly the uploaded photo is cropped. */
+.top-item{top:0;right:0;left:auto;width:454px;height:241px}
+.bottom-item{top:221px;left:0;right:auto;width:454px;height:369px}
+.shoes-item{top:482px;right:0;left:auto;width:454px;height:161px}
+/* Shoes are physically much smaller than a shirt or jeans, so they don't
+   stretch to the full item width like the other pieces — that read as an
+   oversized "zoomed in" shoe. Cap their width and let flex centering keep
+   them in the middle, right under the jeans. */
+.shoes-item .product-image,.shoes-item.flat-item img{width:auto;height:auto;max-width:230px;max-height:142px;object-fit:contain;margin:0 0 0 auto}
+/* Unlimited drag stage — spans the WHOLE live-preview card edge to edge
+   (unlike .product-stage, which is inset from the card's edges). Every
+   draggable photo (garments AND accessories) renders here so it can be
+   dragged anywhere across the full showcase. Position is set per-image
+   via inline left/top (default spot, or wherever it was last dragged
+   to) — see js/outfit-renderer.js and js/free-drag.js. */
+.drag-stage{position:absolute;inset:0;pointer-events:none}
+.drag-image{position:absolute!important;object-fit:contain!important;pointer-events:auto;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none;transition:filter .15s}
+.drag-image:hover{filter:drop-shadow(0 12px 10px rgba(0,0,0,.12)) drop-shadow(0 0 0 2px rgba(17,17,17,.25))}
+.drag-image.dragging{cursor:grabbing;z-index:5;transition:none;filter:drop-shadow(0 16px 16px rgba(0,0,0,.22))}
+/* Remove-photo badge — floats at a garment photo's top-right corner on
+   Template 1's live preview (see attachRemoveBadge() in
+   js/outfit-renderer.js). Positioned in real pixel math off the photo's
+   actual on-screen box, so it tracks correctly through drags and zoom;
+   translate(-50%,-50%) centers the badge exactly on that corner point
+   rather than the top-left. z-index sits above a photo mid-drag (5) so
+   it's always clickable, and it's excluded from the exported PNG via
+   html2canvas's ignoreElements in js/download.js. */
+.photo-remove-btn{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;border:1px solid #ddd;background:#fff;color:#111;font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;pointer-events:auto;z-index:6;box-shadow:0 2px 6px rgba(0,0,0,.18);padding:0}
+.photo-remove-btn:hover{background:#111;color:#fff;border-color:#111}
+/* Accessories keep a fixed starting size (the ratio panel still scales
+   them up/down from there); garment photos get their width set inline
+   per category instead — see GARMENT_DEFAULTS in js/state.js. */
+.accessory-image{width:18%!important;height:18%!important}
+/* Stacking order for overlapping garment photos — shirt tucked in front,
+   jeans/shorts behind it, shoes tucked just under the pant hem (peeking
+   out rather than sitting in front of it), accessories always on top.
+   Shared across all three templates' drag stages since they all use
+   these same category classes. */
+.top-image{z-index:3}
+.bottom-image,.short-image{z-index:1}
+.shoes-image{z-index:2}
+.accessory-image{z-index:4}
+.labels{position:absolute;inset:130px 26px 80px;pointer-events:none}
+.label{position:absolute;width:24%;font-size:10px;line-height:1.45;pointer-events:auto;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
+.label.dragging{cursor:grabbing}
+.label b{display:block;font-family:var(--label-font);font-size:var(--label-size);font-weight:var(--label-weight);color:var(--label-color);font-style:var(--label-style);margin-bottom:5px;letter-spacing:.02em}
+.label>span{display:block;font-family:var(--desc-font);font-size:var(--desc-size);font-weight:var(--desc-weight);color:var(--desc-color);font-style:var(--desc-style);white-space:pre-line}
+.showcase-tag{display:inline-flex;align-items:center;gap:6px;font-style:normal;margin-top:5px;letter-spacing:.02em}
+.showcase-tag-icon-wrap{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:var(--tag-logo-size);height:var(--tag-logo-size);box-sizing:border-box;padding:2px}
+/* Per-category tag position — two independent nudges per label
+   (top/bottom/shoes): one moves the logo + "Showcase" text together,
+   both horizontally AND vertically (--tag-group-x-* / --tag-group-y-*,
+   on .showcase-tag), the other moves ONLY the logo icon on top of
+   that (--tag-logo-x-*, on .showcase-tag-icon-wrap, a child of
+   .showcase-tag, so the two offsets stack additively). Scoped via the
+   shared .top-label/.bottom-label/.shoes-label classes every
+   template's labels already carry (Template 1's own labels AND
+   Template 3's .ed-label-top/.ed-label-bottom, which both also carry
+   these classes), so one set of rules covers every template
+   automatically. Driven by the "Top/Bottom/Shoes tag position" and
+   "... logo position" controls in the "Showcase Tag Style — Logo"
+   panel — see js/app.js. */
+.top-label .showcase-tag{ transform: translateX(var(--tag-group-x-top, 0px)) translateY(var(--tag-group-y-top, 0px)); }
+.bottom-label .showcase-tag{ transform: translateX(var(--tag-group-x-bottom, 0px)) translateY(var(--tag-group-y-bottom, 0px)); }
+.shoes-label .showcase-tag{ transform: translateX(var(--tag-group-x-shoes, 0px)) translateY(var(--tag-group-y-shoes, 0px)); }
+.top-label .showcase-tag-icon-wrap{ transform: translateX(var(--tag-logo-x-top, 0px)) translateY(var(--tag-logo-y-top, 0px)); }
+.bottom-label .showcase-tag-icon-wrap{ transform: translateX(var(--tag-logo-x-bottom, 0px)) translateY(var(--tag-logo-y-bottom, 0px)); }
+.shoes-label .showcase-tag-icon-wrap{ transform: translateX(var(--tag-logo-x-shoes, 0px)) translateY(var(--tag-logo-y-shoes, 0px)); }
+.showcase-tag-icon{width:100%;height:100%;object-fit:contain;display:block}
+.showcase-tag-text{font-family:var(--tag-text-font);font-size:var(--tag-text-size);font-weight:var(--tag-text-weight);font-style:var(--tag-text-style);color:var(--tag-text-color);text-shadow:1px 0 0 var(--tag-text-outline),-1px 0 0 var(--tag-text-outline),0 1px 0 var(--tag-text-outline),0 -1px 0 var(--tag-text-outline),1px 1px 0 var(--tag-text-outline),-1px -1px 0 var(--tag-text-outline),1px -1px 0 var(--tag-text-outline),-1px 1px 0 var(--tag-text-outline)}
+.top-label{left:0;top:5%}.bottom-label{right:0;top:38%}.shoes-label{left:0;bottom:5%}
+.showcase-footer{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.16em;font-weight:800;color:#777}
+.is-hidden{display:none!important}

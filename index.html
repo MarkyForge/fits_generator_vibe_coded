@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIZZ FITS — Auto Outfit Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Roboto:wght@400;500;700;900&family=Nunito:wght@400;500;600;700;800&family=Raleway:wght@400;500;600;700;800&family=Lato:wght@400;700;900&family=Work+Sans:wght@400;500;600;700;800&family=Barlow+Condensed:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@400;500;600;700;800&family=Merriweather:wght@400;700;900&family=Lora:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Crimson+Text:wght@400;600;700&family=Bebas+Neue&family=Caveat:wght@400;500;600;700&family=Anton&family=Pacifico&family=Dancing+Script:wght@400;500;600;700&family=Abril+Fatface&family=Archivo+Black&family=Permanent+Marker&family=Righteous&family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/template-list.css">
+<link rel="stylesheet" href="css/template-editorial.css">
+<link rel="stylesheet" href="css/zoom.css">
+<link rel="stylesheet" href="css/composition.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand-header"><h1>Makii</h1><span>menswear</span></div>
+  <div class="top-actions">
+    <button class="ghost-btn" id="copyPromptBtn">Copy AI Prompt</button>
+    <button class="download-btn" id="downloadBtn">Download Showcase</button>
+  </div>
+</header>
+<main>
+<section class="hero">
+  <div>
+    <p class="eyebrow">AUTO PRODUCT SHOWCASE</p>
+    <h2>Upload it.<br><strong>Fit it clean.</strong></h2>
+    <p class="sub">Upload product photos and the app fits each one proportionally and arranges the outfit in a clean 9:16 showcase.</p>
+  </div>
+  <div class="hero-badge">9:16<br><small>AUTO</small></div>
+</section>
+<section class="workspace">
+<aside class="controls">
+  <div class="panel-title"><h3>Upload Outfit Photos</h3><p>Add one photo for top, bottom and shoes, plus up to 6 accessories.</p></div>
+  <div class="upload-grid">
+    <label class="upload-slot" id="topSlot">
+      <input id="topInput" type="file" accept="image/*">
+      <div class="slot-thumb" id="topThumb"></div>
+      <span class="slot-icon">＋</span><span class="slot-name">TOP</span>
+    </label>
+    <label class="upload-slot" id="bottomSlot">
+      <input id="bottomInput" type="file" accept="image/*">
+      <div class="slot-thumb" id="bottomThumb"></div>
+      <span class="slot-icon">＋</span><span class="slot-name">BOTTOM</span>
+    </label>
+    <label class="upload-slot" id="shoesSlot">
+      <input id="shoesInput" type="file" accept="image/*">
+      <div class="slot-thumb" id="shoesThumb"></div>
+      <span class="slot-icon">＋</span><span class="slot-name">SHOES</span>
+    </label>
+    <label class="upload-slot" id="shortSlot">
+      <input id="shortInput" type="file" accept="image/*">
+      <div class="slot-thumb" id="shortThumb"></div>
+      <span class="slot-icon">＋</span><span class="slot-name">SHORT</span>
+    </label>
+  </div>
+  <div class="accessories-panel">
+    <div class="accessories-head"><span class="slot-name">ACCESSORIES</span><span class="accessory-count" id="accessoryCount">0 / 6</span></div>
+    <div class="accessory-grid" id="accessoryGrid">
+      <label class="upload-slot accessory-slot" id="accessorySlot0">
+        <input id="accessoryInput0" type="file" accept="image/*">
+        <button type="button" class="slot-remove" aria-label="Remove accessory 1">×</button>
+        <div class="slot-thumb" id="accessoryThumb0"></div>
+        <span class="slot-icon">＋</span><span class="slot-name">ACC 1</span>
+      </label>
+      <label class="upload-slot accessory-slot" id="accessorySlot1">
+        <input id="accessoryInput1" type="file" accept="image/*">
+        <button type="button" class="slot-remove" aria-label="Remove accessory 2">×</button>
+        <div class="slot-thumb" id="accessoryThumb1"></div>
+        <span class="slot-icon">＋</span><span class="slot-name">ACC 2</span>
+      </label>
+      <label class="upload-slot accessory-slot" id="accessorySlot2">
+        <input id="accessoryInput2" type="file" accept="image/*">
+        <button type="button" class="slot-remove" aria-label="Remove accessory 3">×</button>
+        <div class="slot-thumb" id="accessoryThumb2"></div>
+        <span class="slot-icon">＋</span><span class="slot-name">ACC 3</span>
+      </label>
+      <label class="upload-slot accessory-slot" id="accessorySlot3">
+        <input id="accessoryInput3" type="file" accept="image/*">
+        <button type="button" class="slot-remove" aria-label="Remove accessory 4">×</button>
+        <div class="slot-thumb" id="accessoryThumb3"></div>
+        <span class="slot-icon">＋</span><span class="slot-name">ACC 4</span>
+      </label>
+      <label class="upload-slot accessory-slot" id="accessorySlot4">
+        <input id="accessoryInput4" type="file" accept="image/*">
+        <button type="button" class="slot-remove" aria-label="Remove accessory 5">×</button>
+        <div class="slot-thumb" id="accessoryThumb4"></div>
+        <span class="slot-icon">＋</span><span class="slot-name">ACC 5</span>
+      </label>
+      <label class="upload-slot accessory-slot" id="accessorySlot5">
+        <input id="accessoryInput5" type="file" accept="image/*">
+        <button type="button" class="slot-remove" aria-label="Remove accessory 6">×</button>
+        <div class="slot-thumb" id="accessoryThumb5"></div>
+        <span class="slot-icon">＋</span><span class="slot-name">ACC 6</span>
+      </label>
+    </div>
+  </div>
+  <div class="auto-status" id="autoStatus"><span></span> READY</div>
+  <p class="hint">Each slot holds one photo — click it or drag a new one onto it to replace it. Drag an accessory around on the live preview to reposition it.</p>
+  <div class="settings">
+    <label>Outfit name<input id="outfitName" type="text" value="STREET LEGEND"></label>
+    <label>Top label<input id="topLabelText" type="text" value="TOP"></label>
+    <label>Top description<textarea id="topText" rows="2">Add top description</textarea></label>
+    <label>Bottom label<input id="bottomLabelText" type="text" value="BOTTOM"></label>
+    <label>Bottom description<textarea id="bottomText" rows="2">Add bottom description</textarea></label>
+    <label>Shoes label<input id="shoesLabelText" type="text" value="SHOES"></label>
+    <label>Shoes description<textarea id="shoesText" rows="2">Add shoes description</textarea></label>
+  </div>
+  <div class="settings desc-style-panel">
+    <div class="settings-section-title">Label Style</div>
+    <label>Font family
+      <select id="labelFontSelect">
+        <optgroup label="Sans-serif">
+          <option value="'Inter', Arial, sans-serif">Inter</option>
+          <option value="'Space Grotesk', Arial, sans-serif" selected>Space Grotesk</option>
+          <option value="'Poppins', Arial, sans-serif">Poppins</option>
+          <option value="'Montserrat', Arial, sans-serif">Montserrat</option>
+          <option value="'Oswald', Arial, sans-serif">Oswald</option>
+          <option value="'Roboto', Arial, sans-serif">Roboto</option>
+          <option value="Arial, Helvetica, sans-serif">Arial</option>
+          <option value="'Nunito', Arial, sans-serif">Nunito</option>
+          <option value="'Raleway', Arial, sans-serif">Raleway</option>
+          <option value="'Lato', Arial, sans-serif">Lato</option>
+          <option value="'Work Sans', Arial, sans-serif">Work Sans</option>
+          <option value="'Barlow Condensed', Arial, sans-serif">Barlow Condensed</option>
+          <option value="'DM Sans', Arial, sans-serif">DM Sans</option>
+        </optgroup>
+        <optgroup label="Serif">
+          <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+          <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+          <option value="'Merriweather', Georgia, serif">Merriweather</option>
+          <option value="'Lora', Georgia, serif">Lora</option>
+          <option value="'Cormorant Garamond', Georgia, serif">Cormorant Garamond</option>
+          <option value="'Crimson Text', Georgia, serif">Crimson Text</option>
+        </optgroup>
+        <optgroup label="Display &amp; Script">
+          <option value="'Bebas Neue', Arial, sans-serif">Bebas Neue</option>
+          <option value="'Caveat', cursive">Caveat</option>
+          <option value="'Anton', Arial, sans-serif">Anton</option>
+          <option value="'Pacifico', cursive">Pacifico</option>
+          <option value="'Dancing Script', cursive">Dancing Script</option>
+          <option value="'Abril Fatface', Georgia, serif">Abril Fatface</option>
+          <option value="'Archivo Black', Arial, sans-serif">Archivo Black</option>
+          <option value="'Permanent Marker', cursive">Permanent Marker</option>
+          <option value="'Righteous', Arial, sans-serif">Righteous</option>
+        </optgroup>
+        <optgroup label="Monospace">
+          <option value="'Courier New', Courier, monospace">Courier New</option>
+          <option value="'JetBrains Mono', Courier, monospace">JetBrains Mono</option>
+          <option value="'Space Mono', Courier, monospace">Space Mono</option>
+        </optgroup>
+      </select>
+    </label>
+    <div class="settings-row">
+      <label>Font size (px)<input id="labelSizeInput" type="number" min="8" max="40" value="16"></label>
+      <label>Font weight
+        <select id="labelWeightSelect">
+          <option value="400">Regular</option>
+          <option value="500">Medium</option>
+          <option value="600">Semibold</option>
+          <option value="700">Bold</option>
+          <option value="800" selected>Extra Bold</option>
+        </select>
+      </label>
+    </div>
+    <div class="settings-row">
+      <label>Color<input id="labelColorInput" type="color" value="#111111"></label>
+      <label class="checkbox-label"><input id="labelItalicInput" type="checkbox"> Italic</label>
+    </div>
+  </div>
+  <div class="settings desc-style-panel">
+    <div class="settings-section-title">Description Style</div>
+    <label>Font family
+      <select id="descFontSelect">
+        <optgroup label="Sans-serif">
+          <option value="'Inter', Arial, sans-serif" selected>Inter</option>
+          <option value="'Space Grotesk', Arial, sans-serif">Space Grotesk</option>
+          <option value="'Poppins', Arial, sans-serif">Poppins</option>
+          <option value="'Montserrat', Arial, sans-serif">Montserrat</option>
+          <option value="'Oswald', Arial, sans-serif">Oswald</option>
+          <option value="'Roboto', Arial, sans-serif">Roboto</option>
+          <option value="Arial, Helvetica, sans-serif">Arial</option>
+          <option value="'Nunito', Arial, sans-serif">Nunito</option>
+          <option value="'Raleway', Arial, sans-serif">Raleway</option>
+          <option value="'Lato', Arial, sans-serif">Lato</option>
+          <option value="'Work Sans', Arial, sans-serif">Work Sans</option>
+          <option value="'Barlow Condensed', Arial, sans-serif">Barlow Condensed</option>
+          <option value="'DM Sans', Arial, sans-serif">DM Sans</option>
+        </optgroup>
+        <optgroup label="Serif">
+          <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+          <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+          <option value="'Merriweather', Georgia, serif">Merriweather</option>
+          <option value="'Lora', Georgia, serif">Lora</option>
+          <option value="'Cormorant Garamond', Georgia, serif">Cormorant Garamond</option>
+          <option value="'Crimson Text', Georgia, serif">Crimson Text</option>
+        </optgroup>
+        <optgroup label="Display &amp; Script">
+          <option value="'Bebas Neue', Arial, sans-serif">Bebas Neue</option>
+          <option value="'Caveat', cursive">Caveat</option>
+          <option value="'Anton', Arial, sans-serif">Anton</option>
+          <option value="'Pacifico', cursive">Pacifico</option>
+          <option value="'Dancing Script', cursive">Dancing Script</option>
+          <option value="'Abril Fatface', Georgia, serif">Abril Fatface</option>
+          <option value="'Archivo Black', Arial, sans-serif">Archivo Black</option>
+          <option value="'Permanent Marker', cursive">Permanent Marker</option>
+          <option value="'Righteous', Arial, sans-serif">Righteous</option>
+        </optgroup>
+        <optgroup label="Monospace">
+          <option value="'Courier New', Courier, monospace">Courier New</option>
+          <option value="'JetBrains Mono', Courier, monospace">JetBrains Mono</option>
+          <option value="'Space Mono', Courier, monospace">Space Mono</option>
+        </optgroup>
+      </select>
+    </label>
+    <div class="settings-row">
+      <label>Font size (px)<input id="descSizeInput" type="number" min="8" max="30" value="12"></label>
+      <label>Font weight
+        <select id="descWeightSelect">
+          <option value="400">Regular</option>
+          <option value="500">Medium</option>
+          <option value="600" selected>Semibold</option>
+          <option value="700">Bold</option>
+          <option value="800">Extra Bold</option>
+        </select>
+      </label>
+    </div>
+    <div class="settings-row">
+      <label>Color<input id="descColorInput" type="color" value="#222222"></label>
+      <label class="checkbox-label"><input id="descItalicInput" type="checkbox"> Italic</label>
+    </div>
+  </div>
+  <div class="settings desc-style-panel">
+    <div class="settings-section-title">Showcase Tag Style — Text</div>
+    <label>Font family
+      <select id="tagTextFontSelect">
+        <optgroup label="Sans-serif">
+          <option value="'Inter', Arial, sans-serif" selected>Inter</option>
+          <option value="'Space Grotesk', Arial, sans-serif">Space Grotesk</option>
+          <option value="'Poppins', Arial, sans-serif">Poppins</option>
+          <option value="'Montserrat', Arial, sans-serif">Montserrat</option>
+          <option value="'Oswald', Arial, sans-serif">Oswald</option>
+          <option value="'Roboto', Arial, sans-serif">Roboto</option>
+          <option value="Arial, Helvetica, sans-serif">Arial</option>
+          <option value="'Nunito', Arial, sans-serif">Nunito</option>
+          <option value="'Raleway', Arial, sans-serif">Raleway</option>
+          <option value="'Lato', Arial, sans-serif">Lato</option>
+          <option value="'Work Sans', Arial, sans-serif">Work Sans</option>
+          <option value="'Barlow Condensed', Arial, sans-serif">Barlow Condensed</option>
+          <option value="'DM Sans', Arial, sans-serif">DM Sans</option>
+        </optgroup>
+        <optgroup label="Serif">
+          <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+          <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+          <option value="'Merriweather', Georgia, serif">Merriweather</option>
+          <option value="'Lora', Georgia, serif">Lora</option>
+          <option value="'Cormorant Garamond', Georgia, serif">Cormorant Garamond</option>
+          <option value="'Crimson Text', Georgia, serif">Crimson Text</option>
+        </optgroup>
+        <optgroup label="Display &amp; Script">
+          <option value="'Bebas Neue', Arial, sans-serif">Bebas Neue</option>
+          <option value="'Caveat', cursive">Caveat</option>
+          <option value="'Anton', Arial, sans-serif">Anton</option>
+          <option value="'Pacifico', cursive">Pacifico</option>
+          <option value="'Dancing Script', cursive">Dancing Script</option>
+          <option value="'Abril Fatface', Georgia, serif">Abril Fatface</option>
+          <option value="'Archivo Black', Arial, sans-serif">Archivo Black</option>
+          <option value="'Permanent Marker', cursive">Permanent Marker</option>
+          <option value="'Righteous', Arial, sans-serif">Righteous</option>
+        </optgroup>
+        <optgroup label="Monospace">
+          <option value="'Courier New', Courier, monospace">Courier New</option>
+          <option value="'JetBrains Mono', Courier, monospace">JetBrains Mono</option>
+          <option value="'Space Mono', Courier, monospace">Space Mono</option>
+        </optgroup>
+      </select>
+    </label>
+    <div class="settings-row">
+      <label>Font size (px)<input id="tagTextSizeInput" type="number" min="8" max="40" value="18"></label>
+      <label>Font weight
+        <select id="tagTextWeightSelect">
+          <option value="400">Regular</option>
+          <option value="500">Medium</option>
+          <option value="600" selected>Semibold</option>
+          <option value="700">Bold</option>
+          <option value="800">Extra Bold</option>
+        </select>
+      </label>
+    </div>
+    <div class="settings-row">
+      <label>Color<input id="tagTextColorInput" type="color" value="#888888"></label>
+      <label class="checkbox-label"><input id="tagTextItalicInput" type="checkbox"> Italic</label>
+    </div>
+  </div>
+  <div class="settings desc-style-panel">
+    <div class="settings-section-title">Showcase Tag Style — Logo</div>
+    <div class="settings-row">
+      <label>Logo size (px)<input id="tagLogoSizeInput" type="number" min="8" max="60" value="18"></label>
+      <label>Color<input id="tagLogoColorInput" type="color" value="#111111"></label>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label-standalone tag-pos-heading">Top tag</span>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label-standalone">Logo + Text</span>
+      <div class="tag-position-btns">
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveLeftBtnTop">◀ Left</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveRightBtnTop">Right ▶</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveUpBtnTop">▲ Up</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveDownBtnTop">Down ▼</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label-standalone tag-pos-heading">Bottom tag</span>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label-standalone">Logo + Text</span>
+      <div class="tag-position-btns">
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveLeftBtnBottom">◀ Left</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveRightBtnBottom">Right ▶</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveUpBtnBottom">▲ Up</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveDownBtnBottom">Down ▼</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label-standalone tag-pos-heading">Shoes tag</span>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label-standalone">Logo + Text</span>
+      <div class="tag-position-btns">
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveLeftBtnShoes">◀ Left</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveRightBtnShoes">Right ▶</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveUpBtnShoes">▲ Up</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagMoveDownBtnShoes">Down ▼</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label-standalone">Logo only (all tags)</span>
+      <div class="tag-position-btns">
+        <button type="button" class="ghost-btn tag-move-btn" id="tagLogoMoveLeftBtnAll">◀ Left</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagLogoMoveRightBtnAll">Right ▶</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagLogoMoveUpBtnAll">▲ Up</button>
+        <button type="button" class="ghost-btn tag-move-btn" id="tagLogoMoveDownBtnAll">Down ▼</button>
+      </div>
+    </div>
+  </div>
+  <div class="settings desc-style-panel">
+    <div class="settings-section-title">Photo Outline / Highlight</div>
+    <p class="hint" style="margin:0 0 10px">Adds a highlight outline hugging every uploaded photo — top, bottom, shoes, short and accessories — on all 3 templates.</p>
+    <div class="settings-row">
+      <label class="checkbox-label"><input id="photoOutlineToggle" type="checkbox"> Enable outline</label>
+    </div>
+    <div class="settings-row">
+      <label>Color<input id="photoOutlineColorInput" type="color" value="#ffffff"></label>
+      <label>Width (px)<input id="photoOutlineWidthInput" type="number" min="1" max="14" value="4"></label>
+    </div>
+    <div class="settings-row">
+      <label class="checkbox-label"><input id="photoOutlineGlowToggle" type="checkbox"> Soft glow instead of hard edge</label>
+    </div>
+  </div>
+</aside>
+<section class="preview-wrap">
+  <div class="preview-header"><span>LIVE PREVIEW</span><span class="status"><i></i> PURE WHITE / AUTO-FIT</span></div>
+  <div class="template-switch" id="templateSwitch">
+    <button type="button" class="template-btn active" data-template="classic">TEMPLATE 1</button>
+    <button type="button" class="template-btn" data-template="list">TEMPLATE 2</button>
+    <button type="button" class="template-btn" data-template="editorial">TEMPLATE 3</button>
+  </div>
+  <div class="composition-row" id="compositionRow">
+    <span class="composition-label">COMPOSITION</span>
+    <button type="button" class="comp-btn active" data-comp="4:5">4:5</button>
+    <button type="button" class="comp-btn" data-comp="9:16">9:16</button>
+    <button type="button" class="comp-btn" data-comp="4:6">4:6</button>
+    <button type="button" class="comp-btn" data-comp="4:7">4:7</button>
+  </div>
+  <div class="bg-row" id="bgRow">
+    <span class="composition-label">BACKGROUND</span>
+    <button type="button" class="bg-btn active" data-bg="white">
+      <span class="bg-swatch bg-swatch-white"></span>WHITE
+    </button>
+    <button type="button" class="bg-btn" data-bg="texture">
+      <span class="bg-swatch bg-swatch-texture"></span>TEXTURE
+    </button>
+    <button type="button" class="bg-btn" data-bg="grid">
+      <span class="bg-swatch bg-swatch-grid"></span>GRID
+    </button>
+  </div>
+  <div class="stage-filters" id="stageFilters">
+    <button type="button" class="filter-btn active" data-category="top">TOP</button>
+    <button type="button" class="filter-btn active" data-category="bottom">BOTTOM</button>
+    <button type="button" class="filter-btn active" data-category="shoes">SHOES</button>
+    <button type="button" class="filter-btn active" data-category="accessories">ACCESSORIES</button>
+  </div>
+  <div class="showcase" id="showcase" data-comp="4:5">
+    <div class="template-view classic-view" id="classicView">
+      <div class="product-stage">
+        <div class="flat-item top-item" id="topStage"></div>
+        <div class="flat-item bottom-item" id="bottomStage"></div>
+        <div class="flat-item shoes-item" id="shoesStage"></div>
+      </div>
+      <!-- Unlimited drag stage: spans the WHOLE live preview card edge to
+           edge (unlike .product-stage above, which is inset from the
+           card's edges). Every draggable photo — top/bottom/short/shoes
+           AND accessories — renders here so it can be dragged anywhere
+           across the full showcase. See js/outfit-renderer.js / free-drag.js. -->
+      <div class="drag-stage" id="dragStage"></div>
+      <div class="labels">
+        <div class="label top-label"><b id="catLabelTop">TOP:</b><span id="labelTop">Add top description</span><i class="showcase-tag"><span class="showcase-tag-icon-wrap"><img class="showcase-tag-icon" src="assets/images/icons/showcase-logo.png" alt=""></span><span class="showcase-tag-text">Showcase</span></i></div>
+        <div class="label bottom-label"><b id="catLabelBottom">BOTTOM:</b><span id="labelBottom">Add bottom description</span><i class="showcase-tag"><span class="showcase-tag-icon-wrap"><img class="showcase-tag-icon" src="assets/images/icons/showcase-logo.png" alt=""></span><span class="showcase-tag-text">Showcase</span></i></div>
+        <div class="label shoes-label"><b id="catLabelShoes">SHOES:</b><span id="labelShoes">Add shoes description</span><i class="showcase-tag"><span class="showcase-tag-icon-wrap"><img class="showcase-tag-icon" src="assets/images/icons/showcase-logo.png" alt=""></span><span class="showcase-tag-text">Showcase</span></i></div>
+      </div>
+      <div class="showcase-footer></div>
+    </div>
+    <div class="template-view list-view is-hidden" id="listView">
+      <div class="lt-grid">
+        <div class="lt-text-col">
+          <div class="lt-section" data-category="top">
+            <h3 class="lt-heading" id="catHeadingTop">TOP</h3>
+            <div class="lt-underline"></div>
+            <ul class="lt-bullets" id="ltTopBullets"></ul>
+          </div>
+          <div class="lt-section" data-category="bottom">
+            <h3 class="lt-heading" id="catHeadingBottom">BOTTOM</h3>
+            <div class="lt-underline"></div>
+            <ul class="lt-bullets" id="ltBottomBullets"></ul>
+          </div>
+          <div class="lt-section" data-category="shoes">
+            <h3 class="lt-heading" id="catHeadingShoes">SHOES</h3>
+            <div class="lt-underline"></div>
+            <ul class="lt-bullets" id="ltShoesBullets"></ul>
+          </div>
+          <div class="lt-section" data-category="accessories">
+            <h3 class="lt-heading">ACCESSORIES</h3>
+            <div class="lt-underline"></div>
+            <ul class="lt-bullets" id="ltAccessoryBullets"></ul>
+          </div>
+        </div>
+        <div class="lt-outfit-col">
+          <div class="lt-outfit-stack">
+            <div class="lt-outfit-item lt-top-item" id="ltTopImage"></div>
+            <div class="lt-outfit-item lt-bottom-item" id="ltBottomImage"></div>
+            <div class="lt-outfit-item lt-shoes-item" id="ltShoesImage"></div>
+          </div>
+          <div class="lt-accessories-grid" id="ltAccessoryGrid"></div>
+        </div>
+      </div>
+      <!-- Same idea as Template 1's #dragStage: covers the WHOLE Template 2
+           live preview edge to edge so its photos can be dragged anywhere
+           across the full card too. See js/outfit-renderer.js / free-drag.js. -->
+      <div class="drag-stage" id="dragStageList"></div>
+    </div>
+    <div class="template-view editorial-view is-hidden" id="editorialView">
+      <!-- Template 3: big edge-to-edge photos, a corner label per piece —
+           modeled on a reference showcase layout. Same unlimited free-drag
+           stage pattern as Templates 1 & 2 (own coordinate space, so
+           dragging here never moves the other templates' photos). See
+           js/outfit-renderer.js / free-drag.js. -->
+      <div class="ed-label ed-label-top top-label">
+        <span class="ed-cat-label" id="edCatLabelTop">TOP</span>
+        <b id="edLabelTop">Add top description</b>
+        <i class="showcase-tag"><span class="showcase-tag-icon-wrap"><img class="showcase-tag-icon" src="assets/images/icons/showcase-logo.png" alt=""></span><span class="showcase-tag-text">Showcase</span></i>
+      </div>
+      <div class="ed-label ed-label-bottom bottom-label">
+        <span class="ed-cat-label" id="edCatLabelBottom">BOTTOM</span>
+        <b id="edLabelBottom">Add bottom description</b>
+        <i class="showcase-tag"><span class="showcase-tag-icon-wrap"><img class="showcase-tag-icon" src="assets/images/icons/showcase-logo.png" alt=""></span><span class="showcase-tag-text">Showcase</span></i>
+      </div>
+      <div class="drag-stage" id="dragStageEditorial"></div>
+    </div>
+  </div>
+
+</section>
+</section>
+</main>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

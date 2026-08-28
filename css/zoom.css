@@ -1,0 +1,95 @@
+/* ============================================================
+   Ratio (zoom) for every photo in the live preview — garment
+   photos (top/bottom/short/shoes, Template 1 + 2) get zoom AND
+   drag-to-move; accessories keep their existing free-drag and
+   just gain the tap-to-zoom ratio panel. See js/image-transform.js.
+   ============================================================ */
+
+.zoomable-image{
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-drag:none;
+  transition:filter .15s;
+}
+.zoomable-image:hover{
+  filter:drop-shadow(0 12px 10px rgba(0,0,0,.12)) drop-shadow(0 0 0 2px rgba(17,17,17,.2));
+}
+.zoomable-image.is-dragging{
+  cursor:grabbing;
+  transition:none;
+  filter:drop-shadow(0 16px 16px rgba(0,0,0,.22));
+}
+/* Template 2's accessory grid photos — tap-to-zoom only, no drag, so a
+   plain pointer cursor instead of the grab/grabbing hand. */
+.lt-accessory-image{
+  cursor:pointer;
+  transition:filter .15s;
+}
+.lt-accessory-image:hover{
+  filter:drop-shadow(0 8px 8px rgba(0,0,0,.1)) drop-shadow(0 0 0 2px rgba(17,17,17,.2));
+}
+/* .product-image covers both garment photos and accessories, so tapping
+   either to open the ratio panel gets the same highlight. */
+.product-image.is-zoom-active{
+  filter:drop-shadow(0 12px 10px rgba(0,0,0,.12)) drop-shadow(0 0 0 2px rgba(197,59,59,.55))!important;
+}
+.lt-accessory-image.is-zoom-active{
+  filter:drop-shadow(0 8px 8px rgba(0,0,0,.1)) drop-shadow(0 0 0 2px rgba(197,59,59,.55))!important;
+}
+
+/* Floating ratio panel — positioned in JS via left/top (fixed), always
+   docked just under the tapped photo and flush with one of its sides,
+   so it never floats free or gets clipped by the showcase card. */
+.zoom-panel{
+  position:fixed;
+  z-index:60;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#111;
+  color:#fff;
+  border-radius:12px;
+  padding:8px 10px;
+  box-shadow:0 14px 34px rgba(0,0,0,.28);
+  font-family:Inter,Arial,sans-serif;
+}
+.zoom-panel.is-hidden{display:none}
+.zoom-panel .zoom-step{
+  width:22px;height:22px;flex:none;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);
+  background:transparent;
+  color:#fff;
+  font-size:15px;
+  line-height:1;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.zoom-panel .zoom-step:hover{background:rgba(255,255,255,.18)}
+.zoom-panel .zoom-range{width:110px;accent-color:#fff;cursor:pointer}
+.zoom-panel .zoom-reset{
+  flex:none;
+  border:0;background:transparent;
+  color:#bbb;
+  font-size:10px;font-weight:700;letter-spacing:.04em;
+  text-decoration:underline;
+  cursor:pointer;
+  padding:0 0 0 2px;
+}
+.zoom-panel .zoom-reset:hover{color:#fff}
+
+/* Little pointer triangle so the panel visibly belongs to the tapped photo. */
+.zoom-panel::after{
+  content:"";
+  position:absolute;
+  width:9px;height:9px;
+  background:#111;
+  transform:rotate(45deg);
+}
+.zoom-panel.pos-bottom-right::after{top:-4px;right:16px}
+.zoom-panel.pos-bottom-left::after{top:-4px;left:16px}
+
+@media(max-width:600px){
+  .zoom-panel .zoom-range{width:84px}
+}

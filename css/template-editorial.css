@@ -1,0 +1,86 @@
+/* ============================================================
+   TEMPLATE 3 — "Editorial" showcase
+   Third, opt-in live-preview layout modeled on a reference
+   showcase screenshot: big edge-to-edge product photos with a
+   bold product-name label + small "Showcase" tag in the corner
+   next to each piece, on a plain white card. No header/footer
+   chrome — the photos and labels ARE the composition.
+
+   Every child here is position:absolute, same as Template 1's
+   .classic-view, so — deliberately — .editorial-view itself gets
+   NO position/size rule of its own. That means its children look
+   past it straight up to #showcase (which already carries the
+   fixed aspect-ratio + overflow:hidden for the selected
+   composition), so the label positions and the drag stage
+   automatically match the live-preview card AND the chosen
+   composition size exactly, on every ratio, with no extra
+   per-composition CSS needed (unlike Template 1, everything here
+   is %-based from the start).
+
+   Scoped under .editorial-view / .ed-*, so Templates 1 and 2 are
+   untouched.
+   ============================================================ */
+
+.ed-label{
+  position: absolute;
+  width: 40%;
+  z-index: 4;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  line-height: 1.22;
+}
+.ed-label.dragging{ cursor: grabbing; }
+/* Small category caption (TOP / BOTTOM) sitting above the description
+   text — editable from the sidebar's "Top label"/"Bottom label" inputs,
+   same idea as Template 1's bold "TOP:" prefix and Template 2's section
+   heading. Always uppercase regardless of what's typed, so it reads as
+   a tag no matter the input's casing. Styled via the shared --label-*
+   vars (see js/app.js applyTextStyle / the sidebar's "Label Style"
+   panel) — kept separate from --desc-* which styles the description
+   text only. */
+.ed-label .ed-cat-label{
+  display: block;
+  font-family: var(--label-font);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  font-style: var(--label-style);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--label-color);
+  margin-bottom: 4px;
+}
+.ed-label b{
+  display: block;
+  letter-spacing: .01em;
+  font-family: var(--desc-font);
+  font-size: var(--desc-size);
+  font-weight: var(--desc-weight);
+  color: var(--desc-color);
+  font-style: var(--desc-style);
+  white-space: pre-line;
+}
+.ed-label .showcase-tag{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  letter-spacing: .06em;
+}
+
+/* Top piece's label sits top-right, right-aligned — mirrors the
+   reference (shirt photo fills the left/center, name sits clear of it
+   on the right). */
+.ed-label-top{ top: 4%; right: 5%; left: auto; text-align: right; }
+
+/* Bottom piece's label sits mid-left, left-aligned, roughly level with
+   where the bottom garment starts — mirrors the reference. */
+.ed-label-bottom{ top: 50%; left: 5%; right: auto; text-align: left; }
+
+@media (max-width: 480px) {
+  .ed-label b{ font-size: 12px; }
+  .ed-label{ width: 46%; }
+}
+

@@ -1,0 +1,220 @@
+/* ============================================================
+   COMPOSITION — Responsive aspect-ratio chooser
+   Works across both Template 1 (classic) and Template 2 (list).
+   Applied as a data-attribute on #showcase so it beats the
+   default rule in style.css without touching those selectors.
+   ============================================================ */
+
+/* ---- Pill row ---- */
+.composition-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 4px 12px;
+  flex-wrap: wrap;
+}
+.composition-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  color: #999;
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+.comp-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #999;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: .2s;
+  white-space: nowrap;
+}
+.comp-btn:hover  { border-color: #111; color: #111; }
+.comp-btn.active { border-color: #111; background: #111; color: #fff; }
+
+/* ============================================================
+   BACKGROUND — optional textured background, on top of the
+   default pure-white showcase card. Applied as a class on
+   #showcase (.bg-texture) so it works identically across all
+   three templates and every composition size — same pattern as
+   the composition data-attr above, just a class instead since
+   it's an on/off toggle rather than a set of variants.
+   ============================================================ */
+.bg-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 4px 12px;
+  flex-wrap: wrap;
+}
+.bg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #999;
+  padding: 6px 14px 6px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: .2s;
+  white-space: nowrap;
+}
+.bg-btn:hover  { border-color: #111; color: #111; }
+.bg-btn.active { border-color: #111; background: #111; color: #fff; }
+.bg-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,.15);
+}
+.bg-swatch-white   { background: #fff; }
+.bg-swatch-texture { background: url('../assets/images/backgrounds/texture-linen.jpg') center/cover; }
+.bg-swatch-grid     { background: url('../assets/images/backgrounds/grid.jpg') center/cover; }
+
+/* The actual background swap — every template view sits inside this
+   same #showcase element, so one rule covers Template 1, 2 and 3, and
+   every composition (4:5 / 9:16 / 4:6 / 4:7) since none of them touch
+   background-*. */
+#showcase.bg-texture {
+  background: url('../assets/images/backgrounds/texture-linen.jpg') center/cover no-repeat;
+}
+#showcase.bg-grid {
+  background: url('../assets/images/backgrounds/grid.jpg') center/cover no-repeat;
+}
+
+/* ============================================================
+   TEMPLATE 1 — showcase aspect ratios
+   The card is always width-constrained (min(100%,686px)).
+   We only swap aspect-ratio; all internal sizing is %- or
+   scale-based so it stays proportional automatically.
+   ============================================================ */
+
+/* Default (no attr) stays 4/5 — defined in style.css */
+
+#showcase[data-comp="4:5"]  { aspect-ratio: 4 / 5;  }
+#showcase[data-comp="9:16"] { aspect-ratio: 9 / 16; }
+#showcase[data-comp="4:6"]  { aspect-ratio: 4 / 6;  }
+#showcase[data-comp="4:7"]  { aspect-ratio: 4 / 7;  }
+
+/* ---- Make Template 1 item positions relative instead of px ----
+   The original stylesheet hard-codes pixel widths/heights that
+   were tuned for a 686 × 857 (4:5) card. We replace them with
+   % values derived from those numbers so they scale with any
+   aspect ratio. All calculations are against the 686-wide card:
+     top-item   h=241 / 857 ≈ 28%   (of card height)
+     bottom-item h=369 / 857 ≈ 43%  top offset ≈ 221/857 ≈ 26%
+     shoes-item  h=161 / 857 ≈ 19%  top offset ≈ 482/857 ≈ 56%
+
+   We override only when a composition attr is set, so the
+   original px rules still work if the attr is missing.
+*/
+#showcase[data-comp] .product-stage {
+  position: absolute;
+  /* top/bottom expressed as % of the card height */
+  inset: 12% 6% 9%;
+}
+
+/* Each item is narrowed to ~75% of the stage width and pushed to the
+   side OPPOSITE its label (top/shoes labels sit on the left, bottom's
+   sits on the right — see .labels below) so the photo and caption
+   never overlap, no matter how tightly the uploaded photo is cropped. */
+#showcase[data-comp] .top-item {
+  top: 0;
+  right: 0;
+  left: auto;
+  width: 75%;
+  height: 31%;
+}
+#showcase[data-comp] .bottom-item {
+  top: 29%;
+  left: 0;
+  right: auto;
+  width: 75%;
+  height: 48%;
+}
+#showcase[data-comp] .shoes-item {
+  top: 75%;
+  right: 0;
+  left: auto;
+  width: 75%;
+  height: 21%;
+}
+
+/* Shoes image cap: keep the shoe from filling the full width, and
+   pinned to the right of its (already right-aligned) box so it stays
+   clear of the shoes label on the left. */
+#showcase[data-comp] .shoes-item .product-image,
+#showcase[data-comp] .shoes-item.flat-item img {
+  width: auto;
+  height: auto;
+  max-width: 50%;
+  max-height: 100%;
+  object-fit: contain;
+  margin: 0 0 0 auto;
+}
+
+/* Labels must also be %-based so they stay in the right zone */
+#showcase[data-comp] .labels {
+  inset: 14% 3% 9%;
+}
+
+/* Footer always at true bottom */
+#showcase[data-comp] .showcase-footer {
+  bottom: 3%;
+}
+
+/* ============================================================
+   TEMPLATE 2 — list layout per composition
+   The #showcase[data-comp="X"] aspect-ratio rules above apply to
+   BOTH templates (no .mode-list exception anymore — see
+   template-list.css), so Template 2's card locks to the exact
+   same fixed size as Template 1's. We additionally adjust the
+   two-column split here to give more or less space to the
+   outfit image column based on the selected composition, so the
+   reserved photo boxes stay proportioned inside that fixed frame.
+   ============================================================ */
+
+/* 4:5 — default columns (already in template-list.css) */
+#showcase[data-comp="4:5"].mode-list  .lt-grid { grid-template-columns: 1fr 1.2fr; }
+
+/* 9:16 — narrow and tall: make the image column a bit wider to
+   emphasise the vertical stack */
+#showcase[data-comp="9:16"].mode-list .lt-grid { grid-template-columns: 1fr 1.6fr; }
+#showcase[data-comp="9:16"].mode-list .lt-top-item    { width: 90%; }
+#showcase[data-comp="9:16"].mode-list .lt-bottom-item { width: 82%; }
+#showcase[data-comp="9:16"].mode-list .lt-shoes-item  { width: 30%; }
+
+/* 4:6 — slightly taller than 4:5: same columns, images a touch larger */
+#showcase[data-comp="4:6"].mode-list  .lt-grid { grid-template-columns: 1fr 1.3fr; }
+#showcase[data-comp="4:6"].mode-list  .lt-top-item    { width: 85%; }
+#showcase[data-comp="4:6"].mode-list  .lt-bottom-item { width: 76%; }
+
+/* 4:7 — tallest: wide image column, generous stacking */
+#showcase[data-comp="4:7"].mode-list  .lt-grid { grid-template-columns: 1fr 1.5fr; }
+#showcase[data-comp="4:7"].mode-list  .lt-top-item    { width: 88%; }
+#showcase[data-comp="4:7"].mode-list  .lt-bottom-item { width: 80%; }
+#showcase[data-comp="4:7"].mode-list  .lt-shoes-item  { width: 28%; }
+
+/* ============================================================
+   PREVIEW WRAPPER — let the wrap grow for taller compositions
+   so the showcase card never overflows into other UI sections
+   ============================================================ */
+.preview-wrap { min-width: 0; }
+
+/* ============================================================
+   RESPONSIVE — hide the label on very narrow screens
+   ============================================================ */
+@media (max-width: 480px) {
+  .composition-label { display: none; }
+  .comp-btn { padding: 6px 11px; font-size: 9px; }
+}
