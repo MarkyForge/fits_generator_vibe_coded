@@ -67,13 +67,22 @@ export function makeFreeDraggable(img, entry, onTap, keys = {}) {
     startX = point.x;
     startY = point.y;
     moved = false;
-    const rect = img.getBoundingClientRect();
-    startLeft = ((rect.left - stageRect.left) / stageRect.width) * 100;
-    startTop = ((rect.top - stageRect.top) / stageRect.height) * 100;
-    // Measured fresh on every press, so it stays correct even after the
-    // photo has been zoomed in/out via the ratio panel.
-    sizePctW = (rect.width / stageRect.width) * 100;
-    sizePctH = (rect.height / stageRect.height) * 100;
+    // Read the element's true laid-out position/size (style left/top,
+    // offsetWidth/offsetHeight) instead of getBoundingClientRect(). The
+    // ratio panel in image-transform.js zooms a photo with a CSS
+    // `transform: scale()`, which inflates and re-centers the RENDERED
+    // box without moving the underlying left/top box it's positioned
+    // from. getBoundingClientRect() reports that inflated/shifted
+    // rendered box, so measuring off it made every drag start from the
+    // wrong spot — the photo would jump the instant you moved it, and
+    // the clamped range (sizePct, below) came out too big, cutting off
+    // real travel on the far edges. offsetWidth/offsetHeight are the
+    // pre-transform layout box, so they stay accurate at any zoom level,
+    // on any photo, on every template's stage.
+    startLeft = parseFloat(img.style.left) || 0;
+    startTop = parseFloat(img.style.top) || 0;
+    sizePctW = (img.offsetWidth / stageRect.width) * 100;
+    sizePctH = (img.offsetHeight / stageRect.height) * 100;
 
     img.classList.add('dragging');
     document.addEventListener('mousemove', onPointerMove);
