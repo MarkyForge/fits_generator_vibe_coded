@@ -24,7 +24,18 @@
 .ed-label{
   position: absolute;
   width: 40%;
-  z-index: 4;
+  /* No explicit z-index (was 4): that used to outrank the garment photos'
+     own z-index (1–3 in css/style.css — .top-image/.bottom-image/etc),
+     since both this label and the drag-stage's photos are absolutely
+     positioned descendants of the same unpositioned .editorial-view and
+     so compete directly on z-index value. A photo dragged underneath
+     this label (a very plausible spot — it's 40% wide) would get stuck:
+     any further mousedown there hit the label instead of the photo, so
+     it could never be picked back up to keep moving it. Leaving this at
+     auto matches how Template 1's equivalent .label is already set up
+     (no z-index there either) — explicit z-index always beats auto, so
+     the photos now stack above the label everywhere, and the label stays
+     grabbable from any part of it a photo isn't currently covering. */
   pointer-events: auto;
   cursor: grab;
   touch-action: none;
