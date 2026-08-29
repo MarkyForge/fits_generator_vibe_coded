@@ -244,15 +244,15 @@ applyTagLogoStyle();
 // min/max, then reuses the exact same apply/persist path as the two
 // individual size inputs above.
 //
-// The logo and the text are deliberately different sizes (the icon
-// reads better a bit larger than the label next to it), so this
-// control does NOT snap both to one identical value — that would
-// flatten the icon and the text to the same px size every time it's
-// touched. Instead it preserves whatever gap currently exists between
-// the two individual fields and shifts both by the same amount, so
-// dragging/typing here scales them together while keeping them
-// distinct. Editing either individual field on its own updates that
-// gap, so the combo control always nudges from the latest sizes.
+// This field must never show (or snap the other two fields to) the
+// same number as "Logo size (px)" — it displays the AVERAGE of the
+// logo size and the text size instead, which by construction differs
+// from both individual fields whenever they're different from each
+// other. Dragging/typing here keeps the gap between logo and text
+// fixed and shifts both by the same amount around that average.
+// Editing either individual field on its own recomputes the gap and
+// the displayed average, so the combo control always reflects the
+// latest sizes.
 const tagComboSizeInput = document.getElementById('tagComboSizeInput');
 function clampToInput(input, value) {
   return Math.max(Number(input.min), Math.min(Number(input.max), value));
@@ -260,12 +260,13 @@ function clampToInput(input, value) {
 let tagSizeDelta = Number(tagTextControls.size.value) - Number(tagLogoControls.size.value);
 function syncTagSizeDelta() {
   tagSizeDelta = Number(tagTextControls.size.value) - Number(tagLogoControls.size.value);
-  tagComboSizeInput.value = tagLogoControls.size.value;
+  const average = (Number(tagLogoControls.size.value) + Number(tagTextControls.size.value)) / 2;
+  tagComboSizeInput.value = Math.round(average);
 }
 tagComboSizeInput.addEventListener('input', () => {
   const value = Number(tagComboSizeInput.value);
-  tagLogoControls.size.value = clampToInput(tagLogoControls.size, value);
-  tagTextControls.size.value = clampToInput(tagTextControls.size, value + tagSizeDelta);
+  tagLogoControls.size.value = clampToInput(tagLogoControls.size, value - tagSizeDelta / 2);
+  tagTextControls.size.value = clampToInput(tagTextControls.size, value + tagSizeDelta / 2);
   applyTagLogoStyle();
   applyTagTextStyle();
   persistNow();
