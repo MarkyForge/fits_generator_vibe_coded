@@ -4,6 +4,7 @@ import { renderShowcase, applyVisibility, renderListTemplate, renderEditorialTem
 import { copyPrompt } from './prompt.js';
 import { downloadShowcase } from './download.js';
 import { loadSnapshot, scheduleSave, saveNow, clearSnapshot } from './persist.js';
+import { initTagResize } from './tag-resize.js';
 
 const statusEl = document.getElementById('autoStatus');
 const outfitName = document.getElementById('outfitName');
@@ -238,6 +239,9 @@ Object.values(tagLogoControls).forEach(input => {
   });
 });
 applyTagLogoStyle();
+
+// Tap-to-resize panel directly on the live preview — see js/tag-resize.js.
+initTagResize(tagLogoControls.size, tagTextControls.size);
 
 // ---- Showcase tag position (left/right), per category ----
 // Each of the top/bottom/shoes tags gets two independent nudges: one

@@ -93,3 +93,36 @@
 @media(max-width:600px){
   .zoom-panel .zoom-range{width:84px}
 }
+
+/* ---- On-canvas logo+text resize panel (tap the Showcase tag) ---- */
+.showcase-tag{
+  cursor:pointer;
+  transition:filter .15s;
+}
+.showcase-tag:hover{
+  filter:drop-shadow(0 0 0 2px rgba(17,17,17,.2));
+}
+.showcase-tag.is-resize-active{
+  filter:drop-shadow(0 0 0 2px rgba(197,59,59,.55))!important;
+}
+.tag-resize-panel{
+  flex-direction:column;
+  align-items:stretch;
+  gap:6px;
+}
+.tag-resize-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.tag-resize-label{
+  width:34px;
+  flex:none;
+  font-size:11px;
+  letter-spacing:.04em;
+  color:#bbb;
+}
+.tag-resize-panel .zoom-range{width:110px}
+@media(max-width:600px){
+  .tag-resize-panel .zoom-range{width:84px}
+}
