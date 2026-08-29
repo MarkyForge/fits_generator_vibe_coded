@@ -43,7 +43,7 @@ main{max-width:1250px;margin:auto;padding:42px 28px 70px}
      white so they're invisible against the white showcase card until a
      visible color is chosen. */
   --tag-text-font: "Inter", Arial, sans-serif;
-  --tag-text-size: 18px;
+  --tag-text-size: 14px;
   --tag-text-weight: 600;
   --tag-text-color: #888;
   --tag-text-style: normal;

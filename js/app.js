@@ -239,27 +239,42 @@ Object.values(tagLogoControls).forEach(input => {
 });
 applyTagLogoStyle();
 
-// Combined "Logo + Text size" field — sets both the logo and the
-// "Showcase" text size at once, each clamped to its own field's
+// Combined "Logo + Text size" field — nudges the logo and the
+// "Showcase" text size together, each clamped to its own field's
 // min/max, then reuses the exact same apply/persist path as the two
 // individual size inputs above.
+//
+// The logo and the text are deliberately different sizes (the icon
+// reads better a bit larger than the label next to it), so this
+// control does NOT snap both to one identical value — that would
+// flatten the icon and the text to the same px size every time it's
+// touched. Instead it preserves whatever gap currently exists between
+// the two individual fields and shifts both by the same amount, so
+// dragging/typing here scales them together while keeping them
+// distinct. Editing either individual field on its own updates that
+// gap, so the combo control always nudges from the latest sizes.
 const tagComboSizeInput = document.getElementById('tagComboSizeInput');
 function clampToInput(input, value) {
   return Math.max(Number(input.min), Math.min(Number(input.max), value));
 }
+let tagSizeDelta = Number(tagTextControls.size.value) - Number(tagLogoControls.size.value);
+function syncTagSizeDelta() {
+  tagSizeDelta = Number(tagTextControls.size.value) - Number(tagLogoControls.size.value);
+  tagComboSizeInput.value = tagLogoControls.size.value;
+}
 tagComboSizeInput.addEventListener('input', () => {
   const value = Number(tagComboSizeInput.value);
   tagLogoControls.size.value = clampToInput(tagLogoControls.size, value);
-  tagTextControls.size.value = clampToInput(tagTextControls.size, value);
+  tagTextControls.size.value = clampToInput(tagTextControls.size, value + tagSizeDelta);
   applyTagLogoStyle();
   applyTagTextStyle();
   persistNow();
 });
 // If either individual field changes on its own, keep the combined
-// field showing the logo's size (the more visually dominant of the two).
-tagLogoControls.size.addEventListener('input', () => {
-  tagComboSizeInput.value = tagLogoControls.size.value;
-});
+// field showing the logo's size (the more visually dominant of the
+// two) and recompute the gap so it isn't lost on the next combo nudge.
+tagLogoControls.size.addEventListener('input', syncTagSizeDelta);
+tagTextControls.size.addEventListener('input', syncTagSizeDelta);
 
 // ---- Showcase tag position (left/right), per category ----
 // Each of the top/bottom/shoes tags gets two independent nudges: one
@@ -791,7 +806,7 @@ async function init() {
     applyTextStyle('desc');
     applyTagTextStyle();
     await applyTagLogoStyle();
-    tagComboSizeInput.value = tagLogoControls.size.value;
+    syncTagSizeDelta();
     applyPhotoOutline();
     applyTagPositions();
     applyTemplateUI(state.template);
