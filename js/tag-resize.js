@@ -109,9 +109,12 @@ export function initTagResize(logoInput, textInput) {
   }
 
   document.addEventListener('click', event => {
-    const tag = event.target.closest('.showcase-tag');
-    if (!tag) return;
+    const btn = event.target.closest('.tag-resize-btn');
+    if (!btn) return;
+    event.preventDefault();
     event.stopPropagation();
+    const tag = btn.closest('.showcase-tag');
+    if (!tag) return;
 
     const panel = ensurePanel(logoInput, textInput, onChange);
     if (activeTag === tag) {
@@ -124,6 +127,6 @@ export function initTagResize(logoInput, textInput) {
     panel.querySelector('.tag-resize-logo').value = logoInput.value;
     panel.querySelector('.tag-resize-text').value = textInput.value;
     panel.classList.remove('is-hidden');
-    positionPanel(panel, tag);
+    positionPanel(panel, btn);
   });
 }

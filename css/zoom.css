@@ -94,16 +94,35 @@
   .zoom-panel .zoom-range{width:84px}
 }
 
-/* ---- On-canvas logo+text resize panel (tap the Showcase tag) ---- */
-.showcase-tag{
+/* ---- On-canvas logo+text resize panel (tap the button under the logo) ---- */
+.tag-resize-btn{
+  position:absolute;
+  top:100%;
+  left:50%;
+  transform:translateX(-50%);
+  margin-top:4px;
+  width:16px;
+  height:16px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:rgba(17,17,17,.72);
+  color:#fff;
+  font-size:9px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
-  transition:filter .15s;
+  z-index:5;
+  transition:background .15s, transform .15s;
 }
-.showcase-tag:hover{
-  filter:drop-shadow(0 0 0 2px rgba(17,17,17,.2));
+.tag-resize-btn:hover{
+  background:#111;
+  transform:translateX(-50%) scale(1.1);
 }
-.showcase-tag.is-resize-active{
-  filter:drop-shadow(0 0 0 2px rgba(197,59,59,.55))!important;
+.showcase-tag.is-resize-active .tag-resize-btn{
+  background:#c53b3b;
 }
 .tag-resize-panel{
   flex-direction:column;
