@@ -49,6 +49,7 @@ main{max-width:1250px;margin:auto;padding:42px 28px 70px}
   --tag-text-style: normal;
   --tag-text-outline: #ffffff;
   --tag-logo-size: 18px;
+  --tag-combo-scale: 1;
   --tag-logo-outline: #ffffff;
   --tag-group-x-top: 0px;
   --tag-group-x-bottom: 0px;
@@ -120,7 +121,7 @@ main{max-width:1250px;margin:auto;padding:42px 28px 70px}
 .label.dragging{cursor:grabbing}
 .label b{display:block;font-family:var(--label-font);font-size:var(--label-size);font-weight:var(--label-weight);color:var(--label-color);font-style:var(--label-style);margin-bottom:5px;letter-spacing:.02em}
 .label>span{display:block;font-family:var(--desc-font);font-size:var(--desc-size);font-weight:var(--desc-weight);color:var(--desc-color);font-style:var(--desc-style);white-space:pre-line}
-.showcase-tag{display:inline-flex;align-items:center;gap:6px;font-style:normal;margin-top:5px;letter-spacing:.02em}
+.showcase-tag{display:inline-flex;align-items:center;gap:6px;font-style:normal;margin-top:5px;letter-spacing:.02em;transform-origin:left center}
 .showcase-tag-icon-wrap{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:var(--tag-logo-size);height:var(--tag-logo-size);box-sizing:border-box;padding:2px}
 /* Per-category tag position — two independent nudges per label
    (top/bottom/shoes): one moves the logo + "Showcase" text together,
@@ -135,9 +136,9 @@ main{max-width:1250px;margin:auto;padding:42px 28px 70px}
    automatically. Driven by the "Top/Bottom/Shoes tag position" and
    "... logo position" controls in the "Showcase Tag Style — Logo"
    panel — see js/app.js. */
-.top-label .showcase-tag{ transform: translateX(var(--tag-group-x-top, 0px)) translateY(var(--tag-group-y-top, 0px)); }
-.bottom-label .showcase-tag{ transform: translateX(var(--tag-group-x-bottom, 0px)) translateY(var(--tag-group-y-bottom, 0px)); }
-.shoes-label .showcase-tag{ transform: translateX(var(--tag-group-x-shoes, 0px)) translateY(var(--tag-group-y-shoes, 0px)); }
+.top-label .showcase-tag{ transform: translateX(var(--tag-group-x-top, 0px)) translateY(var(--tag-group-y-top, 0px)) scale(var(--tag-combo-scale, 1)); }
+.bottom-label .showcase-tag{ transform: translateX(var(--tag-group-x-bottom, 0px)) translateY(var(--tag-group-y-bottom, 0px)) scale(var(--tag-combo-scale, 1)); }
+.shoes-label .showcase-tag{ transform: translateX(var(--tag-group-x-shoes, 0px)) translateY(var(--tag-group-y-shoes, 0px)) scale(var(--tag-combo-scale, 1)); }
 .top-label .showcase-tag-icon-wrap{ transform: translateX(var(--tag-logo-x-top, 0px)) translateY(var(--tag-logo-y-top, 0px)); }
 .bottom-label .showcase-tag-icon-wrap{ transform: translateX(var(--tag-logo-x-bottom, 0px)) translateY(var(--tag-logo-y-bottom, 0px)); }
 .shoes-label .showcase-tag-icon-wrap{ transform: translateX(var(--tag-logo-x-shoes, 0px)) translateY(var(--tag-logo-y-shoes, 0px)); }

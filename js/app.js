@@ -98,6 +98,7 @@ function buildSnapshot() {
       desc: readControlGroup(textStyleControls.desc),
       tagText: readControlGroup(tagTextControls),
       tagLogo: readControlGroup(tagLogoControls),
+      tagComboSize: tagComboSizeInput.value,
       photoOutline: readControlGroup(photoOutlineControls)
     }
   };
@@ -239,43 +240,29 @@ Object.values(tagLogoControls).forEach(input => {
 });
 applyTagLogoStyle();
 
-// Combined "Logo + Text size" field — nudges the logo and the
-// "Showcase" text size together, each clamped to its own field's
-// min/max, then reuses the exact same apply/persist path as the two
-// individual size inputs above.
-//
-// This field must never show (or snap the other two fields to) the
-// same number as "Logo size (px)" — it displays the AVERAGE of the
-// logo size and the text size instead, which by construction differs
-// from both individual fields whenever they're different from each
-// other. Dragging/typing here keeps the gap between logo and text
-// fixed and shifts both by the same amount around that average.
-// Editing either individual field on its own recomputes the gap and
-// the displayed average, so the combo control always reflects the
-// latest sizes.
+// "Logo + Text size" field — an overall size control for the whole
+// "Showcase" tag (icon + wordmark together), kept fully INDEPENDENT
+// from "Logo size (px)": resizing this never reads, writes, or
+// otherwise touches the Logo size field (or the Font size field), and
+// resizing those never touches this one. It works by scaling the tag
+// as a unit via its own CSS custom property (--tag-combo-scale) rather
+// than by deriving a logo px value or a text px value from it, so
+// there's no shared state between the two controls at all.
 const tagComboSizeInput = document.getElementById('tagComboSizeInput');
 function clampToInput(input, value) {
   return Math.max(Number(input.min), Math.min(Number(input.max), value));
 }
-let tagSizeDelta = Number(tagTextControls.size.value) - Number(tagLogoControls.size.value);
-function syncTagSizeDelta() {
-  tagSizeDelta = Number(tagTextControls.size.value) - Number(tagLogoControls.size.value);
-  const average = (Number(tagLogoControls.size.value) + Number(tagTextControls.size.value)) / 2;
-  tagComboSizeInput.value = Math.round(average);
+const TAG_COMBO_BASE = 18; // px value at which the combined scale is 1 (neutral)
+function applyTagComboScale() {
+  const scale = Number(tagComboSizeInput.value) / TAG_COMBO_BASE;
+  showcaseEl.style.setProperty('--tag-combo-scale', scale);
 }
 tagComboSizeInput.addEventListener('input', () => {
-  const value = Number(tagComboSizeInput.value);
-  tagLogoControls.size.value = clampToInput(tagLogoControls.size, value - tagSizeDelta / 2);
-  tagTextControls.size.value = clampToInput(tagTextControls.size, value + tagSizeDelta / 2);
-  applyTagLogoStyle();
-  applyTagTextStyle();
+  tagComboSizeInput.value = clampToInput(tagComboSizeInput, Number(tagComboSizeInput.value));
+  applyTagComboScale();
   persistNow();
 });
-// If either individual field changes on its own, keep the combined
-// field showing the logo's size (the more visually dominant of the
-// two) and recompute the gap so it isn't lost on the next combo nudge.
-tagLogoControls.size.addEventListener('input', syncTagSizeDelta);
-tagTextControls.size.addEventListener('input', syncTagSizeDelta);
+applyTagComboScale();
 
 // ---- Showcase tag position (left/right), per category ----
 // Each of the top/bottom/shoes tags gets two independent nudges: one
@@ -807,7 +794,8 @@ async function init() {
     applyTextStyle('desc');
     applyTagTextStyle();
     await applyTagLogoStyle();
-    syncTagSizeDelta();
+    if (saved.controls?.tagComboSize !== undefined) tagComboSizeInput.value = saved.controls.tagComboSize;
+    applyTagComboScale();
     applyPhotoOutline();
     applyTagPositions();
     applyTemplateUI(state.template);
