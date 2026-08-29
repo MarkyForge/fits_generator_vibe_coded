@@ -239,6 +239,28 @@ Object.values(tagLogoControls).forEach(input => {
 });
 applyTagLogoStyle();
 
+// Combined "Logo + Text size" field — sets both the logo and the
+// "Showcase" text size at once, each clamped to its own field's
+// min/max, then reuses the exact same apply/persist path as the two
+// individual size inputs above.
+const tagComboSizeInput = document.getElementById('tagComboSizeInput');
+function clampToInput(input, value) {
+  return Math.max(Number(input.min), Math.min(Number(input.max), value));
+}
+tagComboSizeInput.addEventListener('input', () => {
+  const value = Number(tagComboSizeInput.value);
+  tagLogoControls.size.value = clampToInput(tagLogoControls.size, value);
+  tagTextControls.size.value = clampToInput(tagTextControls.size, value);
+  applyTagLogoStyle();
+  applyTagTextStyle();
+  persistNow();
+});
+// If either individual field changes on its own, keep the combined
+// field showing the logo's size (the more visually dominant of the two).
+tagLogoControls.size.addEventListener('input', () => {
+  tagComboSizeInput.value = tagLogoControls.size.value;
+});
+
 // ---- Showcase tag position (left/right), per category ----
 // Each of the top/bottom/shoes tags gets two independent nudges: one
 // moves that category's logo + "Showcase" text together as one unit
@@ -769,6 +791,7 @@ async function init() {
     applyTextStyle('desc');
     applyTagTextStyle();
     await applyTagLogoStyle();
+    tagComboSizeInput.value = tagLogoControls.size.value;
     applyPhotoOutline();
     applyTagPositions();
     applyTemplateUI(state.template);
