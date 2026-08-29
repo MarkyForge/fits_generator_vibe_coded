@@ -204,11 +204,10 @@ export async function downloadShowcase(callbacks = {}) {
         backgroundColor: '#ffffff',
         scale: 2,
         useCORS: true,
-        // The Template 1 remove-photo badge (js/outfit-renderer.js) and
-        // the on-canvas logo/text resize button (js/tag-resize.js) are
-        // editor-only controls living inside #showcase — they must never
+        // The Template 1 remove-photo badge (js/outfit-renderer.js) is
+        // an editor-only control living inside #showcase — it must never
         // end up baked into the downloaded PNG.
-        ignoreElements: el => el.classList?.contains('photo-remove-btn') || el.classList?.contains('tag-resize-btn')
+        ignoreElements: el => el.classList?.contains('photo-remove-btn')
       });
     } finally {
       // Always swap the baked images back out, even if html2canvas
