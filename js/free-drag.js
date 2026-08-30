@@ -27,7 +27,7 @@ const TAP_THRESHOLD = 4; // px of movement before a tap counts as a drag
 // (like .editorial-view itself) collapses to ~0 height, which makes the
 // percentage math blow up and pins the dragged element to one edge.
 export function makeFreeDraggable(img, entry, onTap, keys = {}) {
-  const { leftKey = 'left', topKey = 'top', stageSelector = '.drag-stage', unclampRight = false, onMove } = keys;
+  const { leftKey = 'left', topKey = 'top', stageSelector = '.drag-stage', unclampRight = false, unclampTop = false, onMove } = keys;
   let stageRect = null;
   let startX = 0;
   let startY = 0;
@@ -53,9 +53,18 @@ export function makeFreeDraggable(img, entry, onTap, keys = {}) {
   // (100 - sizePct), it lets the photo's LEFT edge travel all the way to
   // the stage's right edge (100) — noticeably more rightward travel,
   // letting the photo slide flush against or past the right edge.
-  function clampAxis(value, sizePct, unclampMax = false) {
+  //
+  // unclampTop (the TOP photo only, on Template 1 and Template 2's live
+  // preview — see outfit-renderer.js) is the same idea, mirrored onto the
+  // vertical axis's near edge: instead of stopping once the photo's OWN
+  // top edge touches the stage's top edge (0), it lets the photo's BOTTOM
+  // edge travel all the way up to the stage's top edge (-sizePct) — extra
+  // upward travel, letting the photo slide flush against or past the top
+  // edge of the live preview instead of stopping just short of it.
+  function clampAxis(value, sizePct, unclampMax = false, unclampMin = false) {
+    const min = unclampMin ? -sizePct : 0;
     const max = unclampMax ? 100 : (100 - sizePct);
-    return Math.max(0, Math.min(max, value));
+    return Math.max(min, Math.min(max, value));
   }
 
   function onPointerDown(event) {
@@ -99,7 +108,7 @@ export function makeFreeDraggable(img, entry, onTap, keys = {}) {
     const deltaLeft = ((point.x - startX) / stageRect.width) * 100;
     const deltaTop = ((point.y - startY) / stageRect.height) * 100;
     const left = clampAxis(startLeft + deltaLeft, sizePctW, unclampRight);
-    const top = clampAxis(startTop + deltaTop, sizePctH);
+    const top = clampAxis(startTop + deltaTop, sizePctH, false, unclampTop);
     img.style.left = `${left}%`;
     img.style.top = `${top}%`;
     img.dataset.left = left;

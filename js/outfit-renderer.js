@@ -64,7 +64,11 @@ function fillListSection(category, bulletsListId) {
     document.getElementById('dragStageList').appendChild(img);
 
     const onTap = makeZoomable(img, product, 'scale');
-    makeFreeDraggable(img, product, onTap);
+    // TOP gets extra upward drag range on Template 2 too, same as
+    // Template 1 — see the unclampTop comment in free-drag.js — so it
+    // can be dragged all the way to/past the very top edge of this
+    // live preview as well, at any composition size.
+    makeFreeDraggable(img, product, onTap, { unclampTop: category === 'top' });
   }
 }
 
@@ -344,9 +348,15 @@ function addProductToStage(product, stageId, category, key = category) {
   // BOTTOM (and SHORT, which shares the same slot) gets extra rightward
   // drag range on Template 1 — see the unclampRight comment in
   // free-drag.js — so it can be pushed all the way to/past the right
-  // edge instead of stopping once its own edge merely touches it.
+  // edge instead of stopping once its own edge merely touches it. TOP
+  // gets the same treatment on the vertical axis instead, so it can be
+  // dragged all the way to/past the very top edge of the live preview
+  // rather than stopping just short of it — at any composition size,
+  // since the drag range is measured fresh off the stage's actual
+  // rendered box on every press, not a fixed number.
   makeFreeDraggable(img, product, onTap, {
     unclampRight: category === 'bottom',
+    unclampTop: category === 'top',
     onMove: () => syncRemoveBadge?.()
   });
   syncRemoveBadge = attachRemoveBadge(img, dragStage, key, getCategoryLabel(category));

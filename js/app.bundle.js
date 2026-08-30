@@ -242,7 +242,7 @@ const TAP_THRESHOLD = 4; // px of movement before a tap counts as a drag
 // (like .editorial-view itself) collapses to ~0 height, which makes the
 // percentage math blow up and pins the dragged element to one edge.
 function makeFreeDraggable(img, entry, onTap, keys = {}) {
-  const { leftKey = 'left', topKey = 'top', stageSelector = '.drag-stage', unclampRight = false, onMove } = keys;
+  const { leftKey = 'left', topKey = 'top', stageSelector = '.drag-stage', unclampRight = false, unclampTop = false, onMove } = keys;
   let stageRect = null;
   let startX = 0;
   let startY = 0;
@@ -268,9 +268,18 @@ function makeFreeDraggable(img, entry, onTap, keys = {}) {
   // (100 - sizePct), it lets the photo's LEFT edge travel all the way to
   // the stage's right edge (100) — noticeably more rightward travel,
   // letting the photo slide flush against or past the right edge.
-  function clampAxis(value, sizePct, unclampMax = false) {
+  //
+  // unclampTop (the TOP photo only, on Template 1 and Template 2's live
+  // preview — see outfit-renderer.js) is the same idea, mirrored onto the
+  // vertical axis's near edge: instead of stopping once the photo's OWN
+  // top edge touches the stage's top edge (0), it lets the photo's BOTTOM
+  // edge travel all the way up to the stage's top edge (-sizePct) — extra
+  // upward travel, letting the photo slide flush against or past the top
+  // edge of the live preview instead of stopping just short of it.
+  function clampAxis(value, sizePct, unclampMax = false, unclampMin = false) {
+    const min = unclampMin ? -sizePct : 0;
     const max = unclampMax ? 100 : (100 - sizePct);
-    return Math.max(0, Math.min(max, value));
+    return Math.max(min, Math.min(max, value));
   }
 
   function onPointerDown(event) {
@@ -314,7 +323,7 @@ function makeFreeDraggable(img, entry, onTap, keys = {}) {
     const deltaLeft = ((point.x - startX) / stageRect.width) * 100;
     const deltaTop = ((point.y - startY) / stageRect.height) * 100;
     const left = clampAxis(startLeft + deltaLeft, sizePctW, unclampRight);
-    const top = clampAxis(startTop + deltaTop, sizePctH);
+    const top = clampAxis(startTop + deltaTop, sizePctH, false, unclampTop);
     img.style.left = `${left}%`;
     img.style.top = `${top}%`;
     img.dataset.left = left;
@@ -723,7 +732,11 @@ function fillListSection(category, bulletsListId) {
     document.getElementById('dragStageList').appendChild(img);
 
     const onTap = makeZoomable(img, product, 'scale');
-    makeFreeDraggable(img, product, onTap);
+    // TOP gets extra upward drag range on Template 2 too, same as
+    // Template 1 — see the unclampTop comment in free-drag.js — so it
+    // can be dragged all the way to/past the very top edge of this
+    // live preview as well, at any composition size.
+    makeFreeDraggable(img, product, onTap, { unclampTop: category === 'top' });
   }
 }
 
@@ -1003,9 +1016,15 @@ function addProductToStage(product, stageId, category, key = category) {
   // BOTTOM (and SHORT, which shares the same slot) gets extra rightward
   // drag range on Template 1 — see the unclampRight comment in
   // free-drag.js — so it can be pushed all the way to/past the right
-  // edge instead of stopping once its own edge merely touches it.
+  // edge instead of stopping once its own edge merely touches it. TOP
+  // gets the same treatment on the vertical axis instead, so it can be
+  // dragged all the way to/past the very top edge of the live preview
+  // rather than stopping just short of it — at any composition size,
+  // since the drag range is measured fresh off the stage's actual
+  // rendered box on every press, not a fixed number.
   makeFreeDraggable(img, product, onTap, {
     unclampRight: category === 'bottom',
+    unclampTop: category === 'top',
     onMove: () => syncRemoveBadge?.()
   });
   syncRemoveBadge = attachRemoveBadge(img, dragStage, key, getCategoryLabel(category));
