@@ -478,6 +478,15 @@
 </section>
 </section>
 </main>
-<script type="module" src="js/app.js"></script>
+<!-- Plain (non-module) bundle of everything in js/*.js, in dependency
+     order, with import/export stripped — see js/app.bundle.js. A
+     type="module" script (what this used to be) is blocked by the
+     browser when the page is opened directly as a file (file://)
+     instead of served over http(s), which silently kills the whole
+     app, including dragging photos on the live preview. A plain
+     script has no such restriction, so the app (and the live-preview
+     drag) now works whether the page is opened straight from disk or
+     served normally. -->
+<script src="js/app.bundle.js"></script>
 </body>
 </html>
