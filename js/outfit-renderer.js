@@ -345,18 +345,18 @@ function addProductToStage(product, stageId, category, key = category) {
   // version of it once attachRemoveBadge() hands it back.
   let syncRemoveBadge;
   const onTap = makeZoomable(img, product, 'scale', () => syncRemoveBadge?.());
-  // BOTTOM (and SHORT, which shares the same slot) gets extra rightward
-  // drag range on Template 1 — see the unclampRight comment in
-  // free-drag.js — so it can be pushed all the way to/past the right
-  // edge instead of stopping once its own edge merely touches it. TOP
-  // gets the same treatment on the vertical axis instead, so it can be
-  // dragged all the way to/past the very top edge of the live preview
-  // rather than stopping just short of it — at any composition size,
-  // since the drag range is measured fresh off the stage's actual
-  // rendered box on every press, not a fixed number.
+  // Every garment photo on Template 1 (TOP/BOTTOM/SHOES/SHORT) gets all
+  // four unclamp flags — see the unclampLeft/Right/Top/Bottom comment in
+  // free-drag.js — so each one can be dragged fully off any side of the
+  // live preview, genuinely edge to edge on every side, not just up to
+  // one edge on one axis. Works at any composition size, since the drag
+  // range is measured fresh off the stage's actual rendered box on every
+  // press, not a fixed number.
   makeFreeDraggable(img, product, onTap, {
-    unclampRight: category === 'bottom',
-    unclampTop: category === 'top',
+    unclampLeft: true,
+    unclampRight: true,
+    unclampTop: true,
+    unclampBottom: true,
     onMove: () => syncRemoveBadge?.()
   });
   syncRemoveBadge = attachRemoveBadge(img, dragStage, key, getCategoryLabel(category));

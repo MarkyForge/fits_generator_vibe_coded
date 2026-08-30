@@ -27,7 +27,11 @@ const TAP_THRESHOLD = 4; // px of movement before a tap counts as a drag
 // (like .editorial-view itself) collapses to ~0 height, which makes the
 // percentage math blow up and pins the dragged element to one edge.
 export function makeFreeDraggable(img, entry, onTap, keys = {}) {
-  const { leftKey = 'left', topKey = 'top', stageSelector = '.drag-stage', unclampRight = false, unclampTop = false, onMove } = keys;
+  const {
+    leftKey = 'left', topKey = 'top', stageSelector = '.drag-stage',
+    unclampLeft = false, unclampRight = false, unclampTop = false, unclampBottom = false,
+    onMove
+  } = keys;
   let stageRect = null;
   let startX = 0;
   let startY = 0;
@@ -47,20 +51,30 @@ export function makeFreeDraggable(img, entry, onTap, keys = {}) {
   // can carry the photo all the way from one edge of the live preview to
   // the other.
   //
-  // unclampRight (Template 1's BOTTOM/SHORT photo only, see
-  // outfit-renderer.js) pushes the max further right: instead of stopping
-  // once the photo's OWN right edge touches the stage's right edge
+  // unclampRight pushes the max further right: instead of stopping once
+  // the photo's OWN right edge touches the stage's right edge
   // (100 - sizePct), it lets the photo's LEFT edge travel all the way to
   // the stage's right edge (100) — noticeably more rightward travel,
   // letting the photo slide flush against or past the right edge.
   //
-  // unclampTop (the TOP photo only, on Template 1 and Template 2's live
-  // preview — see outfit-renderer.js) is the same idea, mirrored onto the
-  // vertical axis's near edge: instead of stopping once the photo's OWN
-  // top edge touches the stage's top edge (0), it lets the photo's BOTTOM
-  // edge travel all the way up to the stage's top edge (-sizePct) — extra
-  // upward travel, letting the photo slide flush against or past the top
-  // edge of the live preview instead of stopping just short of it.
+  // unclampLeft is the mirror of that on the same axis's near edge:
+  // instead of stopping once the photo's OWN left edge touches the
+  // stage's left edge (0), it lets the photo's RIGHT edge travel all the
+  // way to the stage's left edge (-sizePct) — extra leftward travel,
+  // sliding the photo flush against or past the left edge.
+  //
+  // unclampTop / unclampBottom are the same two ideas mirrored onto the
+  // vertical axis: unclampTop lets the photo's BOTTOM edge travel up to
+  // the stage's top edge (-sizePct) instead of stopping once its own top
+  // edge touches it (0); unclampBottom lets the photo's TOP edge travel
+  // down to the stage's bottom edge (100) instead of stopping once its
+  // own bottom edge touches it (100 - sizePct).
+  //
+  // All four together (see outfit-renderer.js — every garment photo on
+  // Template 1 gets all four) mean a photo can be dragged fully off any
+  // side of the live preview, not just up to it — genuinely edge to
+  // edge, on every side, at any composition size, since sizePct is
+  // measured fresh off the stage's real rendered box on every press.
   function clampAxis(value, sizePct, unclampMax = false, unclampMin = false) {
     const min = unclampMin ? -sizePct : 0;
     const max = unclampMax ? 100 : (100 - sizePct);
@@ -107,8 +121,8 @@ export function makeFreeDraggable(img, entry, onTap, keys = {}) {
     if (!moved && Math.hypot(point.x - startX, point.y - startY) > TAP_THRESHOLD) moved = true;
     const deltaLeft = ((point.x - startX) / stageRect.width) * 100;
     const deltaTop = ((point.y - startY) / stageRect.height) * 100;
-    const left = clampAxis(startLeft + deltaLeft, sizePctW, unclampRight);
-    const top = clampAxis(startTop + deltaTop, sizePctH, false, unclampTop);
+    const left = clampAxis(startLeft + deltaLeft, sizePctW, unclampRight, unclampLeft);
+    const top = clampAxis(startTop + deltaTop, sizePctH, unclampBottom, unclampTop);
     img.style.left = `${left}%`;
     img.style.top = `${top}%`;
     img.dataset.left = left;
