@@ -846,7 +846,18 @@ function addEditorialProduct(product, category, key = category) {
   document.getElementById('dragStageEditorial').appendChild(img);
 
   const onTap = makeZoomable(img, product, 'scale');
-  makeFreeDraggable(img, product, onTap);
+  // Same four unclamp flags as Template 1's addProductToStage — without
+  // them, clampAxis's default range (0 to 100-sizePct) stops each photo's
+  // own edge flush against the stage's edge and never lets it past. That
+  // made the TOP and BOTTOM photos on this template's live preview get
+  // stuck short of the corners instead of dragging all the way off any
+  // side, edge to edge, like they do on Template 1.
+  makeFreeDraggable(img, product, onTap, {
+    unclampLeft: true,
+    unclampRight: true,
+    unclampTop: true,
+    unclampBottom: true
+  });
 }
 
 function addEditorialAccessory(product, index) {
