@@ -135,6 +135,50 @@ function bakeOutlineOntoImage(img, settings, renderedWidth) {
   return out;
 }
 
+// ---- Pin #showcase's CSS `aspect-ratio` box to a real pixel height ----
+// #showcase (style.css / composition.css) is sized purely with
+// `aspect-ratio` — no explicit width/height is ever set, and every photo
+// and garment slot inside it is positioned with percentages against
+// that box. Real browsers compute `aspect-ratio` fine, so the live
+// preview always looks right.
+//
+// html2canvas (last released 2021) predates the `aspect-ratio` property
+// and does not understand it. When it clones #showcase into its
+// offscreen render, the clone's height collapses to something other
+// than the real element's height; html2canvas then stretches that
+// mis-sized clone to match the real element's measured bounding box for
+// the final canvas. Every percentage-positioned child stretches with
+// it — most visibly the top garment photo, since it spans the largest
+// share of the showcase's height.
+//
+// Fix: right before capture, measure #showcase's actual rendered
+// height and width and set them as explicit inline pixel styles. That
+// gives html2canvas's clone a real, definite box to lay out against
+// instead of an `aspect-ratio` it can't resolve, so nothing inside
+// needs to stretch. The inline styles are removed again immediately
+// after capture so the live, CSS-aspect-ratio-driven preview (which
+// must keep resizing with the viewport) is untouched.
+function pinShowcaseBoxForCapture(showcase) {
+  const rect = showcase.getBoundingClientRect();
+  const originalWidth = showcase.style.width;
+  const originalHeight = showcase.style.height;
+  const originalAspectRatio = showcase.style.aspectRatio;
+
+  showcase.style.width = `${rect.width}px`;
+  showcase.style.height = `${rect.height}px`;
+  // Belt-and-suspenders: also blank the inline aspect-ratio (there
+  // isn't one set inline today, but this keeps the explicit height
+  // from ever being second-guessed) so the pixel box above is the
+  // only thing determining size during capture.
+  showcase.style.aspectRatio = 'none';
+
+  return () => {
+    showcase.style.width = originalWidth;
+    showcase.style.height = originalHeight;
+    showcase.style.aspectRatio = originalAspectRatio;
+  };
+}
+
 async function bakePhotoOutlineForCapture(root) {
   const settings = getPhotoOutlineSettings();
   if (!settings) return () => {};
@@ -181,6 +225,7 @@ async function bakePhotoOutlineForCapture(root) {
 export async function downloadShowcase(callbacks = {}) {
   callbacks.onStart?.();
   let restoreOutline = () => {};
+  let restoreShowcaseBox = () => {};
   try {
     const showcase = document.getElementById('showcase');
     // Custom webfonts (Inter / Space Grotesk) can still be swapping in
@@ -196,6 +241,12 @@ export async function downloadShowcase(callbacks = {}) {
     // Bake the outline into real pixels before handing the DOM to
     // html2canvas — see bakePhotoOutlineForCapture() above for why.
     restoreOutline = await bakePhotoOutlineForCapture(showcase);
+
+    // Pin the aspect-ratio-sized #showcase box to real pixels — see
+    // pinShowcaseBoxForCapture() above for why. Must happen after the
+    // outline bake (which doesn't change layout) and right before
+    // capture, using the final on-screen dimensions.
+    restoreShowcaseBox = pinShowcaseBoxForCapture(showcase);
 
     let canvas;
     try {
@@ -214,6 +265,7 @@ export async function downloadShowcase(callbacks = {}) {
       // itself throws — otherwise the live editor is left showing the
       // export-only composited photos instead of the originals.
       restoreOutline();
+      restoreShowcaseBox();
     }
 
     const outfitName = document.getElementById('outfitName').value || 'rizz-fits-outfit';
