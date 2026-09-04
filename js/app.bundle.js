@@ -1473,8 +1473,12 @@ function bakeAccessoryFitForCapture(root) {
     img.style.transform = 'none';
     img.style.left = `${(boxRect.left - stageRect.left) + offsetX}px`;
     img.style.top = `${(boxRect.top - stageRect.top) + offsetY}px`;
-    img.style.width = `${contentW}px`;
-    img.style.height = `${contentH}px`;
+    // .accessory-image sets width/height:18%!important in style.css, which
+    // beats a plain inline style — so this HAS to be set with 'important'
+    // priority, or the box silently stays at 18%x18% and html2canvas
+    // stretches the full photo into it (the squash/stretch bug).
+    img.style.setProperty('width', `${contentW}px`, 'important');
+    img.style.setProperty('height', `${contentH}px`, 'important');
 
     restores.push(() => {
       img.style.left = originalLeft;
