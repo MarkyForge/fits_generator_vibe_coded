@@ -1401,9 +1401,97 @@ async function bakePhotoOutlineForCapture(root) {
   return () => restores.forEach(restore => restore());
 }
 
+// ---- Accessory photos: baking object-fit for export ----
+// Every accessory photo (Template 1, 2 and 3's floating accessory images,
+// class `.accessory-image`) is a FIXED 18% x 18% box (see css/style.css)
+// that relies on `object-fit: contain` to shrink the actual photo down to
+// fit inside that square without stretching it — the photo is scaled
+// down and centered inside the box, keeping its real aspect ratio.
+//
+// html2canvas (last released 2021) does not support the `object-fit`
+// property at all: it ignores it completely and just draws the raw image
+// stretched across the element's full width/height box. Every OTHER photo
+// (top/bottom/shoes) escapes this because they're only ever given an
+// explicit WIDTH with height left auto — the browser (and html2canvas)
+// both compute the height from the image's natural ratio, so there's
+// nothing to stretch. Accessories are the only photos with both width AND
+// height forced, so they're the only ones that come out squashed/stretched
+// in the downloaded PNG even though they look perfectly proportioned in
+// the live preview.
+//
+// The fix: right before capture, for every accessory image, work out the
+// same "contain" box object-fit would have produced (based on its real
+// natural aspect ratio and its current on-screen box), then shrink the
+// element itself down to that exact pixel size/position. html2canvas is
+// then handed an element whose box IS the correctly proportioned photo,
+// so there's nothing left for it to stretch. Restored immediately after
+// capture so the live, CSS-driven preview is untouched.
+function bakeAccessoryFitForCapture(root) {
+  const imgs = Array.from(root.querySelectorAll('.accessory-image'));
+  const restores = [];
+
+  imgs.forEach(img => {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    const stage = img.closest('.drag-stage') || img.parentElement;
+    if (!stage) return;
+
+    const boxRect = img.getBoundingClientRect();
+    const stageRect = stage.getBoundingClientRect();
+    if (!boxRect.width || !boxRect.height) return;
+
+    const naturalRatio = img.naturalWidth / img.naturalHeight;
+    const boxRatio = boxRect.width / boxRect.height;
+
+    // Same math the browser's object-fit:contain does: fit to whichever
+    // axis is the tighter constraint, keep the natural ratio, center the
+    // rest inside the original box.
+    let contentW, contentH;
+    if (naturalRatio > boxRatio) {
+      contentW = boxRect.width;
+      contentH = boxRect.width / naturalRatio;
+    } else {
+      contentH = boxRect.height;
+      contentW = boxRect.height * naturalRatio;
+    }
+    const offsetX = (boxRect.width - contentW) / 2;
+    const offsetY = (boxRect.height - contentH) / 2;
+
+    const originalLeft = img.style.left;
+    const originalTop = img.style.top;
+    const originalWidth = img.style.width;
+    const originalHeight = img.style.height;
+    const originalTransform = img.style.transform;
+
+    // boxRect (above) was read via getBoundingClientRect(), which already
+    // reflects any ratio-panel zoom (image-transform.js applies that as a
+    // CSS `transform: scale()` directly on this <img>). The left/top/width/
+    // height we're about to set already bake that scaled size/position in
+    // as real pixels — so the `transform: scale()` itself must be cleared
+    // here, or html2canvas would apply it a second time on top of the
+    // already-scaled box, throwing off any accessory that was resized
+    // with the ratio panel.
+    img.style.transform = 'none';
+    img.style.left = `${(boxRect.left - stageRect.left) + offsetX}px`;
+    img.style.top = `${(boxRect.top - stageRect.top) + offsetY}px`;
+    img.style.width = `${contentW}px`;
+    img.style.height = `${contentH}px`;
+
+    restores.push(() => {
+      img.style.left = originalLeft;
+      img.style.top = originalTop;
+      img.style.width = originalWidth;
+      img.style.height = originalHeight;
+      img.style.transform = originalTransform;
+    });
+  });
+
+  return () => restores.forEach(restore => restore());
+}
+
 async function downloadShowcase(callbacks = {}) {
   callbacks.onStart?.();
   let restoreOutline = () => {};
+  let restoreAccessoryFit = () => {};
   let restoreShowcaseBox = () => {};
   try {
     const showcase = document.getElementById('showcase');
@@ -1420,6 +1508,12 @@ async function downloadShowcase(callbacks = {}) {
     // Bake the outline into real pixels before handing the DOM to
     // html2canvas — see bakePhotoOutlineForCapture() above for why.
     restoreOutline = await bakePhotoOutlineForCapture(showcase);
+
+    // Fix accessory photos being stretched by html2canvas's lack of
+    // object-fit support — see bakeAccessoryFitForCapture() above for
+    // why. Must run after the outline bake (so it measures the final
+    // baked <img>s) and before the showcase box is pinned/captured.
+    restoreAccessoryFit = bakeAccessoryFitForCapture(showcase);
 
     // Pin the aspect-ratio-sized #showcase box to real pixels — see
     // pinShowcaseBoxForCapture() above for why. Must happen after the
@@ -1444,6 +1538,7 @@ async function downloadShowcase(callbacks = {}) {
       // itself throws — otherwise the live editor is left showing the
       // export-only composited photos instead of the originals.
       restoreOutline();
+      restoreAccessoryFit();
       restoreShowcaseBox();
     }
 
