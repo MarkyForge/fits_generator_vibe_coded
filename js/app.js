@@ -116,9 +116,9 @@ function setStatus(text, mode = 'ready') {
 
 function syncText() {
   state.outfitName = outfitName.value;
-  state.categoryLabels.top = topLabelText.value || 'TOP';
-  state.categoryLabels.bottom = bottomLabelText.value || 'BOTTOM';
-  state.categoryLabels.shoes = shoesLabelText.value || 'SHOES';
+  state.categoryLabels.top = topLabelText.value.trim() ? topLabelText.value : 'TOP';
+  state.categoryLabels.bottom = bottomLabelText.value.trim() ? bottomLabelText.value : 'BOTTOM';
+  state.categoryLabels.shoes = shoesLabelText.value.trim() ? shoesLabelText.value : 'SHOES';
   state.descriptions.top = topText.value;
   state.descriptions.bottom = bottomText.value;
   state.descriptions.shoes = shoesText.value;
@@ -136,11 +136,11 @@ function syncText() {
   document.getElementById('edCatLabelTop').textContent = state.categoryLabels.top;
   document.getElementById('edCatLabelBottom').textContent = state.categoryLabels.bottom;
 
-  document.getElementById('labelTop').textContent = topText.value || 'Top';
-  document.getElementById('labelBottom').textContent = bottomText.value || 'Bottom';
-  document.getElementById('labelShoes').textContent = shoesText.value || 'Shoes';
-  document.getElementById('edLabelTop').textContent = topText.value || 'Top';
-  document.getElementById('edLabelBottom').textContent = bottomText.value || 'Bottom';
+  document.getElementById('labelTop').textContent = topText.value.trim() ? topText.value : 'Top';
+  document.getElementById('labelBottom').textContent = bottomText.value.trim() ? bottomText.value : 'Bottom';
+  document.getElementById('labelShoes').textContent = shoesText.value.trim() ? shoesText.value : 'Shoes';
+  document.getElementById('edLabelTop').textContent = topText.value.trim() ? topText.value : 'Top';
+  document.getElementById('edLabelBottom').textContent = bottomText.value.trim() ? bottomText.value : 'Bottom';
 
   renderListTemplate();
   renderEditorialTemplate();

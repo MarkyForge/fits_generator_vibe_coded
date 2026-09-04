@@ -62,12 +62,13 @@
   text-transform:uppercase;
   margin:0 0 8px;
   color:var(--label-color);
+  white-space:pre-wrap;
 }
 .lt-underline{width:54px;height:3px;background:#111;margin-bottom:14px;border-radius:2px}
 
 .lt-bullets{list-style:none;margin:0;padding:0}
 .lt-bullets li{position:relative;padding-left:15px;line-height:1.5;margin-bottom:9px;
-  font-family:var(--desc-font);font-size:var(--desc-size);font-weight:var(--desc-weight);color:var(--desc-color);font-style:var(--desc-style);
+  font-family:var(--desc-font);font-size:var(--desc-size);font-weight:var(--desc-weight);color:var(--desc-color);font-style:var(--desc-style);white-space:pre-wrap;
 }
 .lt-bullets li::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:var(--desc-color)}
 .lt-bullets:empty::before{content:"Add a description to see bullets here";display:block;font-size:10px;font-weight:600;color:#bbb;padding-left:0}

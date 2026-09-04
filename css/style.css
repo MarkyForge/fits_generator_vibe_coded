@@ -119,8 +119,8 @@ main{max-width:1250px;margin:auto;padding:42px 28px 70px}
 .labels{position:absolute;inset:130px 26px 80px;pointer-events:none}
 .label{position:absolute;width:24%;font-size:10px;line-height:1.45;pointer-events:auto;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
 .label.dragging{cursor:grabbing}
-.label b{display:block;font-family:var(--label-font);font-size:var(--label-size);font-weight:var(--label-weight);color:var(--label-color);font-style:var(--label-style);margin-bottom:5px;letter-spacing:.02em}
-.label>span{display:block;font-family:var(--desc-font);font-size:var(--desc-size);font-weight:var(--desc-weight);color:var(--desc-color);font-style:var(--desc-style);white-space:pre-line}
+.label b{display:block;font-family:var(--label-font);font-size:var(--label-size);font-weight:var(--label-weight);color:var(--label-color);font-style:var(--label-style);margin-bottom:5px;letter-spacing:.02em;white-space:pre-wrap}
+.label>span{display:block;font-family:var(--desc-font);font-size:var(--desc-size);font-weight:var(--desc-weight);color:var(--desc-color);font-style:var(--desc-style);white-space:pre-wrap}
 .showcase-tag{display:inline-flex;align-items:center;gap:6px;font-style:normal;margin-top:5px;letter-spacing:.02em;transform-origin:left center}
 .showcase-tag-icon-wrap{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:var(--tag-logo-size);height:var(--tag-logo-size);box-sizing:border-box;padding:2px}
 /* Per-category tag position — two independent nudges per label
